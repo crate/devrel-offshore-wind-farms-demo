@@ -1,7 +1,7 @@
 # TODO
 
 ```bash
-cd OffshortWindFarmsDemo
+cd OffshoreWindFarmsDemo
 dotnet run
 ```
 
