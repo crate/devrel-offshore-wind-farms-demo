@@ -1,4 +1,5 @@
-const myMap = L.map('mapId').setView([54.91451400766527, -3.5375976562500004], 6);
+const INITIAL_ZOOM = 6;
+const myMap = L.map('mapId').setView([54.91451400766527, -3.5375976562500004], INITIAL_ZOOM);
 
 async function showAllWindFarms() {
   const response = await fetch('/api/windfarms');
@@ -20,10 +21,17 @@ async function showAllWindFarms() {
   }
 }
 
+myMap.on('zoomend', function() {
+  console.log(`Zoom end level ${myMap.getZoom()}!`);
+});
+
+myMap.setMaxBounds(myMap.getBounds());
+myMap.setMinZoom(INITIAL_ZOOM);
+
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
   {
-    maxZoom: 19,
+    maxZoom: 11,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }
 ).addTo(myMap);
