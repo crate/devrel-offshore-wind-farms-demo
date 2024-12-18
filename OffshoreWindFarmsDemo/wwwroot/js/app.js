@@ -15,7 +15,8 @@ async function showAllWindFarms() {
     };
 
     console.log(windFarm.location);
-    L.geoJSON(geoJSON).addTo(myMap);
+    //L.geoJSON(geoJSON).addTo(myMap);
+    L.marker([windFarm.location.y, windFarm.location.x]).addTo(myMap);
   }
 }
 
