@@ -31,9 +31,9 @@ app.MapGet("/api/windfarms", async () => {
         );
     }
 
-    return new {
+    return Results.Ok(new {
         results = windFarms
-    };
+    });
 });
 
 app.MapGet("/api/latest/{id}", async (string id) => {
