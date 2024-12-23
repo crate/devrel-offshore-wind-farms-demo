@@ -36,4 +36,29 @@ app.MapGet("/api/windfarms", async () => {
     };
 });
 
+app.MapGet("/api/latest/{id}", async (string id) => {
+    await using var conn = await dataSource.OpenConnectionAsync();
+
+    await using var command = new NpgsqlCommand(
+        "SELECT ts, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1",
+        conn
+    ) {
+        Parameters = 
+        {
+            new() { Value = id }
+        }
+    };
+        
+    await using var reader = await command.ExecuteReaderAsync();
+    await reader.ReadAsync();
+
+    return new {
+        results = new {
+            timestamp = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
+            output = reader.GetDouble(1),
+            outputPercentage = reader.GetDouble(2) 
+        }
+    };
+});
+
 app.Run();
