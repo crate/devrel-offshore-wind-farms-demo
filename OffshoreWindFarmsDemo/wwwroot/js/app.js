@@ -28,11 +28,13 @@ async function showAllWindFarms() {
     };
 
     windFarmBoundaries.addLayer(L.geoJSON(geoJSON));
-    const windFarmMarker = L.marker([windFarm.location.y, windFarm.location.x], { windFarmId: windFarm.id });
+    const windFarmMarker = L.marker([windFarm.location.y, windFarm.location.x], { 
+      windFarmId: windFarm.id,
+      windFarmName: windFarm.name
+    });
     
     windFarmMarker.on('click', function(e) {
-      console.log('TODO load some content from the database...');
-      this.setPopupContent('<p>TODO load some content from the database...</p>');
+      this.setPopupContent(`<h2>${this.options.windFarmName}</h2><p>TODO load some content from the database ${this.options.windFarmId}...</p>`);
     });
 
     windFarmMarker.bindPopup('<p>TODO...</p>');
