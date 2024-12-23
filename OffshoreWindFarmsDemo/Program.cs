@@ -52,13 +52,13 @@ app.MapGet("/api/latest/{id}", async (string id) => {
     await using var reader = await command.ExecuteReaderAsync();
     await reader.ReadAsync();
 
-    return new {
-        results = new {
+    return reader.HasRows ? Results.Ok(
+        new {
             timestamp = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
             output = reader.GetDouble(1),
             outputPercentage = reader.GetDouble(2) 
         }
-    };
+    ) : Results.NotFound($"No such windfarm ID: {id}");
 });
 
 app.Run();
