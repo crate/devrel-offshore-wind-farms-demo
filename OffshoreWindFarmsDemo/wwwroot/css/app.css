@@ -1,2 +1,11 @@
 /* TODO */
 #mapId { height: 800px; }
+
+div.leaflet-popup-content-wrapper > div > h2 {
+   font-weight: bold; 
+}
+
+div.leaflet-popup-content-wrapper > div > hr {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}

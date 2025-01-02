@@ -33,9 +33,21 @@ async function showAllWindFarms() {
       windFarmName: windFarm.name
     });
     
-    windFarmMarker.on('click', function(e) {
-      this.setPopupContent(`<h2>${this.options.windFarmName}</h2><p>TODO load some content from the database ${this.options.windFarmId}...</p>`);
-      // TODO call /api/latest/<id>...
+    windFarmMarker.on('click', async function(e) {
+      const response = await fetch(`/api/latest/${this.options.windFarmId}`);
+      const responseDoc = await response.json();
+      const details = responseDoc.results[0];
+
+      const updatedAt = new Date(details.timestamp);
+
+      this.setPopupContent(`
+        <h2>${this.options.windFarmName}</h2>
+        <hr/>
+        <ul>
+          <li><b>${updatedAt.toLocaleString('en-UK')}</b></li>
+          <li><b>Output:</b> ${details.output} (${details.outputPercentage}%)</li>
+        </ul>
+      `);
     });
 
     windFarmMarker.bindPopup('<p>TODO...</p>');
