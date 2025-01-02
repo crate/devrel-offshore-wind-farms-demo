@@ -21,9 +21,11 @@ You'll need a CrateDB database to store the project's data in.  Choose between a
 
 Create a database in the cloud by first pointing your browser at [`console.cratedb.cloud`](https://console.cratedb.cloud/).
 
-TODO next steps...
+Login or create an account, then follow the prompts to create a "CRFREE" database on shared infrastructure in the cloud of your choice (choose from Amazon AWS, Microsoft Azure and Google Cloud).  Pick a region close to where you live to minimize latency between your machine running the code and the database that stores the data. 
 
-TODO store the credentials for later...
+Once you've created your cluster, you'll see a "Download" button.  This downloads a text file containing a copy of your database hostname, port, username and password.  Make sure to download these as you'll need them later and won't see them again.
+
+Wait until the cluster status shows a green status icon and "Healthy" status before continuing.  Note that it may take a few moments to provision your database.
 
 ### Local Option
 
@@ -41,7 +43,7 @@ http://localhost:4200
 
 ## Creating the Database Tables
 
-Now you have a database, you'll need to create the tables that this project uses.  Copy and paste the following SQL command into the database console, then execute it to creata a table named `windfarms`:
+Now you have a database, you'll need to create the tables that this project uses.  Copy and paste the following SQL command into the database console, then execute it to create a table named `windfarms`:
 
 ```sql
 CREATE TABLE windfarms (
