@@ -110,7 +110,15 @@ cd devrel-offshore-wind-farms-demo/OffshoreWindFarmsDemo
 
 ## Configuring the Database Connection
 
+You'll need to configure the project to talk to your CrateDB database.  How you do this depends on whether you chose the cloud or local option...
+
+### Cloud Option
+
 TODO
+
+### Local Option
+
+The project comes pre-configured to expect CrateDB to be at `localhost:5432` so there's nothing to do here. Simply carry on to the next step :)
 
 ## Running the Project
 
