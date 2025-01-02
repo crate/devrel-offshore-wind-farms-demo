@@ -1,17 +1,43 @@
 # CrateDB C# Offshore Wind Farms Demo Application
 
-```bash
-cd OffshoreWindFarmsDemo
-dotnet run
-```
+## Introduction
+
+TODO
+
+## Prerequisites
+
+To run this project you'll need to install the following software:
+
+* .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
+* Git command line tools ([download](https://git-scm.com/downloads)).
+* Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
+* Access to a CrateDB cluster (see below for details).
+
+## Getting a CrateDB Database
+
+You'll need a CrateDB database to store the project's data in.  Choose between a free hosted instance in the cloud, or run the database locally.  Either option is fine.
+
+### Cloud Option
+
+TODO
+
+### Local Option
+
+The best way to run CrateDB locally is by using Docker.  We've provided a Docker Compose file for you.  Once you've installed [Docker Desktop](https://www.docker.com/products/docker-desktop/), you can start the database like this:
 
 ```bash
-dotnet watch
+docker compose up
 ```
 
+Once the database is up and running, you can access the console by pointing your browser at:
+
 ```
-http://localhost:5213/
+http://localhost:4200
 ```
+
+## Creating the Database Tables
+
+Now you have a database, you'll need to create the tables that this project uses.  Copy and paste the following SQL command into the database console, then execute it to creata a table named `windfarms`:
 
 ```sql
 CREATE TABLE windfarms (
@@ -33,13 +59,7 @@ CREATE TABLE windfarms (
 );
 ```
 
-```sql
-COPY windfarms                                 
-FROM 'https://github.com/crate/cratedb-datasets/raw/main/devrel/uk-offshore-wind-farm-data/wind_farms.json'
-RETURN SUMMARY;
-```
-
-(45 records)
+Then copy and paste this statement into the console, and execute it to create a table named `windfarm_output`:
 
 ```sql
 CREATE TABLE windfarm_output (
@@ -51,6 +71,20 @@ CREATE TABLE windfarm_output (
 ) PARTITIONED BY (day);
 ```
 
+## Populating the Tables with Sample Data
+
+Right now your database tables are empty.  Let's add some sample data!  Copy and paste the following SQL statement into the console then execute it to insert records for each windfarm into the `windfarms` table:
+
+```sql
+COPY windfarms                                 
+FROM 'https://github.com/crate/cratedb-datasets/raw/main/devrel/uk-offshore-wind-farm-data/wind_farms.json'
+RETURN SUMMARY;
+```
+
+Examine the output of this command once it's completed.  You should see that 45 records were loaded with 0 errors.
+
+Next, let's load the sample power generation data into the `windfarm_output` table.  Copy and paste this SQL statement into the console, then execute it:
+
 ```sql
 COPY windfarm_output
 FROM 'https://github.com/crate/cratedb-datasets/raw/main/devrel/uk-offshore-wind-farm-data/wind_farm_output.json.gz' 
@@ -58,4 +92,42 @@ WITH (compression='gzip')
 RETURN SUMMARY;
 ```
 
-(75825 records)
+Examine the output of this command once it's completed.  You should expect 75,825 records to have loaded with 0 errors.
+
+## Getting the Code
+
+Next you'll need to get a copy of the code from GitHub by cloning the repository.  Open up your terminal and change directory to wherever you store coding projects, then enter the following commands:
+
+```bash
+git clone https://github.com/crate/devrel-offshore-wind-farms-demo.git
+```
+
+This creates a new folder named `devrel-offshore-wind-farms-demo`.  You'll need to change directory as follows before running the project.
+
+```bash
+cd devrel-offshore-wind-farms-demo/OffshoreWindFarmsDemo
+```
+
+## Configuring the Database Connection
+
+TODO
+
+## Running the Project
+
+There are two ways to start the application.  If you are planning to modify the source code and want the server to live reload when you save a source file, use this:
+
+```bash
+dotnet watch
+```
+
+If you just want to run the server and aren't planning to edit the source code, start it like this:
+
+```bash
+dotnet run
+```
+
+Once you have the server running, point your browser at port 5213 and you should see the map front end:
+
+```
+http://localhost:5213/
+```
