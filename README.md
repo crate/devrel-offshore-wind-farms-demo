@@ -41,9 +41,11 @@ Once the database is up and running, you can access the console by pointing your
 http://localhost:4200
 ```
 
+Note that if you have something else running on port 4200 (CrateDB admin UI) or port 5432 (Postgres protocol port) you'll need to stop those other services first, or edit the Docker compose file to expose these ports at different numbers on your local machine.
+
 ## Creating the Database Tables
 
-Now you have a database, you'll need to create the tables that this project uses.  Copy and paste the following SQL command into the database console, then execute it to create a table named `windfarms`:
+Now you have a database, you'll need to create the tables that this project uses.  Copy and paste the following SQL command into the database console, then execute it to create a table named `windfarms`. (If your database is in the Cloud, you can find the console in the menu to the left when logged in at `console.cratedb.cloud`. If you are running the database locally then go to `localhost:4200` and select the console icon from the left hand menu):
 
 ```sql
 CREATE TABLE windfarms (
@@ -120,11 +122,38 @@ You'll need to configure the project to talk to your CrateDB database.  How you 
 
 ### Cloud Option
 
-TODO - which file is it?
+Use your text editor / IDE to open the file `appsettings.Development.json`.
+
+The file's contents should look like this:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "CrateDB": "Host=127.0.0.1;Username=crate;Password=;Database=doc"
+  },
+  "AllowedHosts": "*"
+}
+```
+
+Edit the value of the key `CrateDB` in the `ConnectionStrings` object. Make the following changes:
+
+* Replace `Host=127.0.0.1` with the hostname of your cloud database (example: `Host=my-cluster.gke1.us-central1.gcp.cratedb.net`).
+* Replace `Username=crate` with `Username=admin`.
+* Replace `Password=` with the password for yuour cloud database (example `Password=sdfW234fwfTY^f`).
+
+Save your changes.
 
 ### Local Option
 
-The project comes pre-configured to expect CrateDB to be at `localhost:5432` so there's nothing to do here. Simply carry on to the next step :)
+The project comes pre-configured to expect CrateDB to be at `127.0.0.1:5432` so there's nothing to do here (unless you changed the port in the Docker Compose file). Our Docker Compose file exports port 5432 from the container, so simply carry on to the next step :)
+
+If you changed the port in the Docker Compose file (for example because you are also running Postgres locally on port 5432), then you'll need to edit `appsettings.Development.json` and change `Host=127.0.0.1` to reflect your updated port number (example: `Host=127.0.0.1:6666`).  Be sure to save your changes before continuing.
 
 ## Running the Project
 
