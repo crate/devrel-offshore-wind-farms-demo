@@ -19,7 +19,11 @@ You'll need a CrateDB database to store the project's data in.  Choose between a
 
 ### Cloud Option
 
-TODO
+Create a database in the cloud by first pointing your browser at [`console.cratedb.cloud`](https://console.cratedb.cloud/).
+
+TODO next steps...
+
+TODO store the credentials for later...
 
 ### Local Option
 
@@ -114,7 +118,7 @@ You'll need to configure the project to talk to your CrateDB database.  How you 
 
 ### Cloud Option
 
-TODO
+TODO - which file is it?
 
 ### Local Option
 
