@@ -35,6 +35,7 @@ async function showAllWindFarms() {
     
     windFarmMarker.on('click', function(e) {
       this.setPopupContent(`<h2>${this.options.windFarmName}</h2><p>TODO load some content from the database ${this.options.windFarmId}...</p>`);
+      // TODO call /api/latest/<id>...
     });
 
     windFarmMarker.bindPopup('<p>TODO...</p>');
