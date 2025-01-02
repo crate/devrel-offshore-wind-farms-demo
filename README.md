@@ -174,3 +174,7 @@ Once you have the server running, point your browser at port 5213 and you should
 ```
 http://localhost:5213/
 ```
+
+## Understanding the Code
+
+TODO
