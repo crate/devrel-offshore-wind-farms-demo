@@ -42,9 +42,9 @@ async function showAllWindFarms() {
 
       this.setPopupContent(`
         <h2>${this.options.windFarmName}</h2>
+        <span class="update-time">${updatedAt.toLocaleString('en-UK')}</span>
         <hr/>
         <ul>
-          <li><b>${updatedAt.toLocaleString('en-UK')}</b></li>
           <li><b>Output:</b> ${details.output} (${details.outputPercentage}%)</li>
         </ul>
       `);

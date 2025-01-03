@@ -2,10 +2,17 @@
 #mapId { height: 800px; }
 
 div.leaflet-popup-content-wrapper > div > h2 {
-   font-weight: bold; 
+    font-size: 1.1em;
+    font-weight: bold; 
 }
 
 div.leaflet-popup-content-wrapper > div > hr {
     margin-top: 3px;
     margin-bottom: 3px;
+}
+
+.update-time {
+    font-style: italic;
+    font-size: 0.8em;
+    color: #666666;
 }
