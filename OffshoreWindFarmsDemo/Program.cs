@@ -6,6 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+// Do not leave parameterLoggingEnabled on in production!
+NpgsqlLoggingConfiguration.InitializeLogging(loggerFactory, parameterLoggingEnabled: true);
+
 app.UseFileServer();
 
 // TODO consider trapping a null here.
@@ -65,6 +70,40 @@ app.MapGet("/api/latest/{id}", async (string id) => {
         });
     } else {
         return Results.NotFound($"No such windfarm ID: {id}");
+    }
+});
+
+app.MapGet("/api/avgpctformonth/{id}/{ts}", async (string id, long ts) => {
+    await using var conn = await dataSource.OpenConnectionAsync();
+
+    await using var command = new NpgsqlCommand(
+        // TODO can we truncate the timestamp to the start of the month in the database?
+        "SELECT trunc(avg(outputpercentage), 2) FROM windfarm_output WHERE windfarmid = $1 and month = $2",
+        conn
+    ) {
+        Parameters = 
+        {
+            new() { Value = id },
+            new() { Value = ts }
+        }
+    };
+
+    Console.WriteLine(ts);
+
+    await using var reader = await command.ExecuteReaderAsync();
+    await reader.ReadAsync();
+
+    if (reader.HasRows) {
+        var data = new List<Object>();
+        data.Add(new {
+            avgPct = reader.GetDouble(0),
+        });
+
+        return Results.Ok(new {
+            results = data
+        });
+    } else {
+        return Results.NotFound($"No data for windfarm ID: {id}");
     }
 });
 
