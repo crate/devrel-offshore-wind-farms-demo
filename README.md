@@ -71,11 +71,12 @@ Then copy and paste this statement into the console, and execute it to create a 
 
 ```sql
 CREATE TABLE windfarm_output (
-   windfarmid TEXT,
-   ts TIMESTAMP WITHOUT TIME ZONE,
-   day TIMESTAMP WITH TIME ZONE GENERATED ALWAYS AS date_trunc('day', ts),
-   output DOUBLE PRECISION,
-   outputpercentage DOUBLE PRECISION
+    windfarmid TEXT,
+    ts TIMESTAMP WITHOUT TIME ZONE,
+    month GENERATED ALWAYS AS date_trunc('month', ts),
+    day TIMESTAMP WITH TIME ZONE GENERATED ALWAYS AS date_trunc('day', ts),
+    output DOUBLE PRECISION,
+    outputpercentage DOUBLE PRECISION
 ) PARTITIONED BY (day);
 ```
 
