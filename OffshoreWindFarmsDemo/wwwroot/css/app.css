@@ -9,6 +9,8 @@ div.leaflet-popup-content-wrapper > div > h2 {
 div.leaflet-popup-content-wrapper > div > hr {
     margin-top: 3px;
     margin-bottom: 3px;
+    background-color: #666666;
+    height: 1px;
 }
 
 .update-time {
