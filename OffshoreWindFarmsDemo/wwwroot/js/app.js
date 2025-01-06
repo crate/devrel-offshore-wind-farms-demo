@@ -106,8 +106,15 @@ myMap.on('zoomend', function() {
   }
 });
 
-// TODO fix the bounds here so that the popups on the Northern wind farms can be seen!
-myMap.setMaxBounds(myMap.getBounds());
+
+// Fix the bounds here so that the popups on the Northern wind farms can be seen but the 
+// user can't wander too far away from the area we want them to be looking at.
+myMap.setMaxBounds(
+  L.latLngBounds(
+    L.latLng(35.746512259918504, -54.22851562500001), // SouthWest
+    L.latLng(72.91963546581484, 47.109375) // North East
+  )
+);
 myMap.setMinZoom(INITIAL_ZOOM);
 
 L.tileLayer(
