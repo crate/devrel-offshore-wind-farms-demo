@@ -22,7 +22,9 @@ async function showAllWindFarms() {
     const geoJSON = {
       type: 'Feature',
       properties: {
-        // TODO
+        // TODO make this dynamic.  See the source of the following example:
+        // https://leafletjs.com/examples/geojson/example.html
+        popupContent: '<b>Hmmm check this out...</b>'
       },
       geometry: boundaries
     };
@@ -34,18 +36,24 @@ async function showAllWindFarms() {
     });
     
     windFarmMarker.on('click', async function(e) {
+      // Get the latest summary data for this wind farm.
+      const latestResponse = await fetch(`/api/latest/${this.options.windFarmId}`);
+      const latestJson = await latestResponse.json();
+      const details = latestJson.results[0];
+
+      const startOfDay = new Date(details.timestamp);
+      startOfDay.setUTCHours(0, 0, 0, 0);
+
       const responses = await Promise.all([
-        `/api/latest/${this.options.windFarmId}`,
         `/api/avgpctformonth/${this.options.windFarmId}/1722470400000`, // TODO dynamic TS which will need the result from the above.
-        `/api/outputforday/${this.options.windFarmId}/1730073600000` // TODO dynamic TS which will need the result from the above.
+        `/api/outputforday/${this.options.windFarmId}/${startOfDay.getTime()}`
       ].map(async url => {
         const resp = await fetch(url);
         return resp.json();
       }));
 
-      const details = responses[0].results[0];
-      const monthlyAvgOutput = responses[1].results[0].avgPct;
-      const hourlyCumulativeOutput = responses[2].results;
+      const monthlyAvgOutput = responses[0].results[0].avgPct;
+      const hourlyCumulativeOutput = responses[1].results;
       const updatedAt = new Date(details.timestamp);
 
       this.setPopupContent(`
@@ -57,7 +65,6 @@ async function showAllWindFarms() {
           <li><b>Monthly Avg:</b> ${monthlyAvgOutput}%</li>
         </ul>
         <hr/>
-        <!-- TODO Render the hourly output as a table! -->
         <table>
           <thead>
             <tr>
