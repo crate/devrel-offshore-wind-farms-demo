@@ -13,6 +13,32 @@ div.leaflet-popup-content-wrapper > div > hr {
     height: 1px;
 }
 
+div.leaflet-popup-content-wrapper > div > table {
+    margin-top: 10px;
+    width: 100%;
+}
+
+div.leaflet-popup-content-wrapper > div > table > thead > tr {
+    font-weight: bold;
+    color: #000000 !important;
+    font-size: 0.8em;
+    border: 1px solid #aaaaaa;
+}
+
+div.leaflet-popup-content-wrapper > div > table > tbody > tr {
+    border: 1px solid #aaaaaa;
+    background-color: #cccccc;
+    font-size: 0.8em;
+}
+
+div.leaflet-popup-content-wrapper > div > table > tbody > tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+div.leaflet-popup-content-wrapper > div > table > tbody > td {
+    color: #000000 !important;
+}
+
 .update-time {
     font-style: italic;
     font-size: 0.8em;

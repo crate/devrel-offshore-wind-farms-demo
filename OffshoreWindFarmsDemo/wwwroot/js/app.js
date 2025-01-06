@@ -65,7 +65,7 @@ async function showAllWindFarms() {
             <tr>
               <th scope="col">Hour</th>
               <th scope="col">Output</th>
-              <th scope="col">Running Total</th>
+              <th scope="col">Total</th>
             </tr>
           </thead>
           <tbody>
