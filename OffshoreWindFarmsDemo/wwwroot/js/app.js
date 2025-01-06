@@ -73,9 +73,7 @@ async function showAllWindFarms() {
       `);
     });
 
-    // TODO fix this.
-    windFarmMarker.bindPopup('<p>TODO...</p>');
-
+    windFarmMarker.bindPopup('<p>Loading data...</p>');
     windFarmMarkers.addLayer(windFarmMarker);
 
     for (const turbineLocation of windFarm.turbines.locations) {
