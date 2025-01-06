@@ -111,8 +111,8 @@ myMap.on('zoomend', function() {
 // user can't wander too far away from the area we want them to be looking at.
 myMap.setMaxBounds(
   L.latLngBounds(
-    L.latLng(35.746512259918504, -54.22851562500001), // SouthWest
-    L.latLng(72.91963546581484, 47.109375) // North East
+    L.latLng(48.67645370777654, -14.897460937500002), // SouthWest
+    L.latLng(72.91963546581484, 10.437011718750002) // North East
   )
 );
 myMap.setMinZoom(INITIAL_ZOOM);
