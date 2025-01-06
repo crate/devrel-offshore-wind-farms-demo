@@ -48,8 +48,6 @@ async function showAllWindFarms() {
       const hourlyCumulativeOutput = responses[2].results;
       const updatedAt = new Date(details.timestamp);
 
-      console.log(hourlyCumulativeOutput);
-
       this.setPopupContent(`
         <h2>${this.options.windFarmName}</h2>
         <span class="update-time">${updatedAt.toLocaleString('en-UK')}</span>
