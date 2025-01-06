@@ -34,11 +34,21 @@ async function showAllWindFarms() {
     });
     
     windFarmMarker.on('click', async function(e) {
-      const response = await fetch(`/api/latest/${this.options.windFarmId}`);
-      const responseDoc = await response.json();
-      const details = responseDoc.results[0];
+      const responses = await Promise.all([
+        `/api/latest/${this.options.windFarmId}`,
+        `/api/avgpctformonth/${this.options.windFarmId}/1722470400000`, // TODO dynamic TS which will need the result from the above.
+        `/api/outputforday/${this.options.windFarmId}/1730073600000` // TODO dynamic TS which will need the result from the above.
+      ].map(async url => {
+        const resp = await fetch(url);
+        return resp.json();
+      }));
 
+      const details = responses[0].results[0];
+      const monthlyAvgOutput = responses[1].results[0].avgPct;
+      const hourlyCumulativeOutput = responses[2].results;
       const updatedAt = new Date(details.timestamp);
+
+      console.log(hourlyCumulativeOutput);
 
       this.setPopupContent(`
         <h2>${this.options.windFarmName}</h2>
@@ -46,10 +56,26 @@ async function showAllWindFarms() {
         <hr/>
         <ul>
           <li><b>Output:</b> ${details.output} (${details.outputPercentage}%)</li>
+          <li><b>Monthly Avg:</b> ${monthlyAvgOutput}%</li>
         </ul>
+        <hr/>
+        <!-- TODO Render the hourly output as a table! -->
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Hour</th>
+              <th scope="col">Output</th>
+              <th scope="col">Running Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${hourlyCumulativeOutput.map(item => '<tr><td>' + item.hour + '</td><td>' + item.output + '</td><td>' + item.cumulativeOutput + '</td></tr>').join('')}
+          </tbody>
+        </table>
       `);
     });
 
+    // TODO fix this.
     windFarmMarker.bindPopup('<p>TODO...</p>');
 
     windFarmMarkers.addLayer(windFarmMarker);
@@ -84,6 +110,7 @@ myMap.on('zoomend', function() {
   }
 });
 
+// TODO fix the bounds here so that the popups on the Northern wind farms can be seen!
 myMap.setMaxBounds(myMap.getBounds());
 myMap.setMinZoom(INITIAL_ZOOM);
 
