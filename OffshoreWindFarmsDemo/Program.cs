@@ -6,11 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
-var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-// Do not leave parameterLoggingEnabled on in production!
-NpgsqlLoggingConfiguration.InitializeLogging(loggerFactory, parameterLoggingEnabled: true);
-
 app.UseFileServer();
 
 // TODO consider trapping a null here.
@@ -88,8 +83,6 @@ app.MapGet("/api/avgpctformonth/{id}/{ts}", async (string id, long ts) => {
         }
     };
 
-    Console.WriteLine(ts);
-
     await using var reader = await command.ExecuteReaderAsync();
     await reader.ReadAsync();
 
@@ -105,6 +98,38 @@ app.MapGet("/api/avgpctformonth/{id}/{ts}", async (string id, long ts) => {
     } else {
         return Results.NotFound($"No data for windfarm ID: {id}");
     }
+});
+
+app.MapGet("/api/outputforday/{id}/{ts}", async (string id, long ts) => {
+    await using var conn = await dataSource.OpenConnectionAsync();
+
+    await using var command = new NpgsqlCommand(
+        "SELECT extract(hour from ts) as hour, output, sum(output) OVER (ORDER BY ts ASC) FROM windfarm_output WHERE windfarmid = $1 AND day = $2 ORDER BY hour ASC",
+        conn
+    ) {
+        Parameters = {
+            new() { Value = id },
+            new() { Value = ts }
+        }
+    };
+
+    await using var reader = await command.ExecuteReaderAsync();
+
+    var outputs = new List<Object>();
+
+    while (await reader.ReadAsync()) {
+        outputs.Add(
+            new {
+                hour = reader.GetInt32(0),
+                output = reader.GetDouble(1),
+                cumulativeOutput = double.Parse(reader.GetDouble(2).ToString("N2")) // TODO: Can we do this in SQL?
+            }
+        );
+    }
+
+    return Results.Ok(new {
+        results = outputs
+    });
 });
 
 app.Run();
