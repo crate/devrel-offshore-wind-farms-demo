@@ -1,4 +1,3 @@
-/* TODO */
 #mapId { height: 800px; }
 
 div.leaflet-popup-content-wrapper > div > h2 {
@@ -20,9 +19,13 @@ div.leaflet-popup-content-wrapper > div > table {
 
 div.leaflet-popup-content-wrapper > div > table > thead > tr {
     font-weight: bold;
-    color: #000000 !important;
     font-size: 0.8em;
     border: 1px solid #aaaaaa;
+}
+
+div.leaflet-popup-content-wrapper > div > table > thead > tr > th {
+    padding-left: 8px;
+    color: #000000;
 }
 
 div.leaflet-popup-content-wrapper > div > table > tbody > tr {
@@ -35,8 +38,8 @@ div.leaflet-popup-content-wrapper > div > table > tbody > tr:nth-child(even) {
     background-color: #eeeeee;
 }
 
-div.leaflet-popup-content-wrapper > div > table > tbody > td {
-    color: #000000 !important;
+div.leaflet-popup-content-wrapper > div > table > tbody > tr > td {
+    padding-left: 8px;
 }
 
 .update-time {
