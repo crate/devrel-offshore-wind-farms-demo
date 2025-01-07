@@ -41,12 +41,9 @@ async function showAllWindFarms() {
       const latestJson = await latestResponse.json();
       const details = latestJson.results[0];
 
-      const startOfDay = new Date(details.timestamp);
-      startOfDay.setUTCHours(0, 0, 0, 0);
-
       const responses = await Promise.all([
-        `/api/avgpctformonth/${this.options.windFarmId}/1722470400000`, // TODO dynamic TS which will need the result from the above.
-        `/api/outputforday/${this.options.windFarmId}/${startOfDay.getTime()}`
+        `/api/avgpctformonth/${this.options.windFarmId}/${details.month}`,
+        `/api/outputforday/${this.options.windFarmId}/${details.day}`
       ].map(async url => {
         const resp = await fetch(url);
         return resp.json();

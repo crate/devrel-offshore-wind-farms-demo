@@ -40,7 +40,7 @@ app.MapGet("/api/latest/{id}", async (string id) => {
     await using var conn = await dataSource.OpenConnectionAsync();
 
     await using var command = new NpgsqlCommand(
-        "SELECT ts, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1",
+        "SELECT ts, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1",
         conn
     ) {
         Parameters = 
@@ -56,8 +56,10 @@ app.MapGet("/api/latest/{id}", async (string id) => {
         var data = new List<Object>();
         data.Add(new {
             timestamp = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
-            output = reader.GetDouble(1),
-            outputPercentage = reader.GetDouble(2) 
+            day = ((DateTimeOffset)reader.GetDateTime(1)).ToUnixTimeMilliseconds(),
+            month = ((DateTimeOffset)reader.GetDateTime(2)).ToUnixTimeMilliseconds(),
+            output = reader.GetDouble(3),
+            outputPercentage = reader.GetDouble(4) 
         });
 
         return Results.Ok(new {
