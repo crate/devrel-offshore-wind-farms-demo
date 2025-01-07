@@ -184,4 +184,12 @@ http://localhost:5213/
 
 ## Understanding the Code
 
-TODO
+TODO introduction.
+
+### Server Code
+
+TODO.
+
+### Front End Code
+
+TODO.
