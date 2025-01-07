@@ -15,10 +15,10 @@ app.MapGet("/api/windfarms", async () => {
     await using var reader = await command.ExecuteReaderAsync();
 
     // TODO can the database driver help with this?
-    var windFarms = new List<Object>();
+    var data = new List<Object>();
 
     while (await reader.ReadAsync()) {
-        windFarms.Add(
+        data.Add(
             new {
                 id = reader.GetString(0),
                 name = reader.GetString(1),
@@ -30,8 +30,9 @@ app.MapGet("/api/windfarms", async () => {
         );
     }
 
+    // TODO no data response needed here.
     return Results.Ok(new {
-        results = windFarms
+        results = data
     });
 });
 
@@ -115,10 +116,10 @@ app.MapGet("/api/outputforday/{id}/{ts}", async (string id, long ts) => {
 
     await using var reader = await command.ExecuteReaderAsync();
 
-    var outputs = new List<Object>();
+    var data = new List<Object>();
 
     while (await reader.ReadAsync()) {
-        outputs.Add(
+        data.Add(
             new {
                 hour = reader.GetInt32(0),
                 output = reader.GetDouble(1),
@@ -127,8 +128,40 @@ app.MapGet("/api/outputforday/{id}/{ts}", async (string id, long ts) => {
         );
     }
 
+    // TODO need a no data response here?
     return Results.Ok(new {
-        results = outputs
+        results = data
+    });
+});
+
+app.MapGet("/api/dailymaxpct/{id}/{days}", async (string id, int days) => {
+    await using var conn = await dataSource.OpenConnectionAsync();
+
+    await using var command = new NpgsqlCommand(
+        "SELECT day, max(outputpercentage) FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2;",
+        conn
+    ) {
+        Parameters = {
+            new() { Value = id },
+            new() { Value = days } 
+        }
+    };
+
+    await using var reader = await command.ExecuteReaderAsync();
+
+    var data = new List<Object>();
+
+    while (await reader.ReadAsync()) {
+        data.Add(new {
+            day = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
+            maxOutputPercentage = reader.GetDouble(1) 
+        });
+
+    }
+
+    // TODO need a no data response here?
+    return Results.Ok(new {
+        results = data
     });
 });
 
