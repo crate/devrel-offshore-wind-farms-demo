@@ -4,6 +4,12 @@
 
 TODO
 
+Other resources that use this dataset include:
+
+* A conference talk from the AI and Big Data Expo, Amsterdam 2024.  [Watch it on YouTube](https://www.youtube.com/watch?v=xqiLGjaTlBk).
+* A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
+* The raw data for this dataset, as JSON files.  [Download it from GitHub](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data)
+
 ## Prerequisites
 
 To run this project you'll need to install the following software:
