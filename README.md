@@ -2,7 +2,10 @@
 
 ## Introduction
 
+TODO ADD GIF
+
 TODO
+
 
 Other resources that use this dataset include:
 
