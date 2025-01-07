@@ -22,14 +22,21 @@ async function showAllWindFarms() {
     const geoJSON = {
       type: 'Feature',
       properties: {
-        // TODO make this dynamic.  See the source of the following example:
-        // https://leafletjs.com/examples/geojson/example.html
-        popupContent: '<b>Hmmm check this out...</b>'
+        windFarmId: windFarm.id
       },
       geometry: boundaries
     };
 
-    windFarmBoundaries.addLayer(L.geoJSON(geoJSON));
+    windFarmBoundaries.addLayer(L.geoJSON(geoJSON, {
+      onEachFeature: function (feature, layer) {
+        layer.on({
+          click: function (e) {
+            console.log(e.target.feature.properties.windFarmId);
+          }
+        });     
+      }
+    }));
+
     const windFarmMarker = L.marker([windFarm.location.y, windFarm.location.x], { 
       windFarmId: windFarm.id,
       windFarmName: windFarm.name
