@@ -22,35 +22,53 @@ async function showAllWindFarms() {
     const geoJSON = {
       type: 'Feature',
       properties: {
-        windFarmId: windFarm.id
+        windFarm: {
+          id: windFarm.id,
+          name: windFarm.name
+        },
+        turbines: {
+          howMany: windFarm.turbines.howmany,
+          make: windFarm.turbines.brand,
+          model: windFarm.turbines.model
+        }
       },
       geometry: boundaries
     };
 
     windFarmBoundaries.addLayer(L.geoJSON(geoJSON, {
       onEachFeature: function (feature, layer) {
+        layer.bindPopup('<p>Loading data...</p>');
+
         layer.on({
           click: function (e) {
-            console.log(e.target.feature.properties.windFarmId);
+            // TODO update the popup content to show:
+            // - Full name of wind farm - from properties
+            // - Number of turbines - from properties
+            // - Turbine model if known - from properties
+            // - Call an endpoint to get daily output for the last 10 days.
+            console.log(e.target.feature.properties.windFarm.id);
+            console.log(e.target.feature.properties);
           }
         });     
       }
     }));
 
     const windFarmMarker = L.marker([windFarm.location.y, windFarm.location.x], { 
-      windFarmId: windFarm.id,
-      windFarmName: windFarm.name
+      windFarm: {
+        id: windFarm.id,
+        name: windFarm.name
+      }
     });
     
     windFarmMarker.on('click', async function(e) {
       // Get the latest summary data for this wind farm.
-      const latestResponse = await fetch(`/api/latest/${this.options.windFarmId}`);
+      const latestResponse = await fetch(`/api/latest/${this.options.windFarm.id}`);
       const latestJson = await latestResponse.json();
       const details = latestJson.results[0];
 
       const responses = await Promise.all([
-        `/api/avgpctformonth/${this.options.windFarmId}/${details.month}`,
-        `/api/outputforday/${this.options.windFarmId}/${details.day}`
+        `/api/avgpctformonth/${this.options.windFarm.id}/${details.month}`,
+        `/api/outputforday/${this.options.windFarm.id}/${details.day}`
       ].map(async url => {
         const resp = await fetch(url);
         return resp.json();
@@ -61,7 +79,7 @@ async function showAllWindFarms() {
       const updatedAt = new Date(details.timestamp);
 
       this.setPopupContent(`
-        <h2>${this.options.windFarmName}</h2>
+        <h2>${this.options.windFarm.name}</h2>
         <span class="update-time">${updatedAt.toLocaleString('en-UK')}</span>
         <hr/>
         <ul>
