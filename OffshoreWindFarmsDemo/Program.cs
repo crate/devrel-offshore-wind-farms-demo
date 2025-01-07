@@ -8,7 +8,6 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 app.UseFileServer();
 
-// TODO consider trapping a null here.
 await using var dataSource = NpgsqlDataSource.Create(app.Configuration.GetConnectionString("CrateDB")!);
 
 app.MapGet("/api/windfarms", async () => {
