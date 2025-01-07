@@ -123,7 +123,7 @@ You'll need to configure the project to talk to your CrateDB database.  How you 
 
 ### Cloud Option
 
-Use your text editor / IDE to open the file `appsettings.Development.json`.
+Use your text editor / IDE to open the file `appsettings.json`.
 
 The file's contents should look like this:
 
