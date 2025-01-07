@@ -74,7 +74,6 @@ app.MapGet("/api/avgpctformonth/{id}/{ts}", async (string id, long ts) => {
     await using var conn = await dataSource.OpenConnectionAsync();
 
     await using var command = new NpgsqlCommand(
-        // TODO can we truncate the timestamp to the start of the month in the database?
         "SELECT trunc(avg(outputpercentage), 2) FROM windfarm_output WHERE windfarmid = $1 and month = $2",
         conn
     ) {
