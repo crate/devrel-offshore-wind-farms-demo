@@ -40,16 +40,33 @@ async function showAllWindFarms() {
         layer.bindPopup('<p>Loading data...</p>');
 
         layer.on({
-          click: function (e) {
-            // TODO update the popup content to show:
-            // - Full name of wind farm - from properties
-            // - Number of turbines - from properties
-            // - Turbine model if known - from properties
-            // - Call an endpoint to get daily output for the last 10 days.
-            console.log(e.target.feature.properties.windFarm.id);
-            console.log(e.target.feature.properties);
-          }
-        });     
+          click: async function (e) {
+            const props = e.target.feature.properties;
+            console.log(props.windFarm.id);
+
+            const dataResponse = await fetch(`/api/dailymaxpct/${props.windFarm.id}/10`);
+            const dataJson = await dataResponse.json();
+            const data = dataJson.results;
+      
+            this.setPopupContent(`
+              <h2>${props.windFarm.name}</h2>
+              <hr/>
+              <span class="turbine-info"><b>Turbines:</b> ${props.turbines.howMany} x ${props.turbines.model}</span>
+              <hr/>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Max Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${data.map(item => '<tr><td>' + item.day + '</td><td>' + item.maxOutputPercentage + '%</td></tr>').join('')}
+                </tbody>
+              </table>
+            `);
+          }     
+        })
       }
     }));
 
@@ -140,8 +157,8 @@ myMap.on('zoomend', function() {
 // user can't wander too far away from the area we want them to be looking at.
 myMap.setMaxBounds(
   L.latLngBounds(
-    L.latLng(48.67645370777654, -14.897460937500002), // SouthWest
-    L.latLng(72.91963546581484, 10.437011718750002) // North East
+    L.latLng(48.67645370777654, -14.897460937500002), // South West corner.
+    L.latLng(72.91963546581484, 10.437011718750002) // North East corner.
   )
 );
 myMap.setMinZoom(INITIAL_ZOOM);
