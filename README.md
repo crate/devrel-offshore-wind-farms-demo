@@ -11,7 +11,7 @@ Other resources that use this dataset include:
 
 * A conference talk from the AI and Big Data Expo, Amsterdam 2024.  [Watch it on YouTube](https://www.youtube.com/watch?v=xqiLGjaTlBk).
 * A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
-* The raw data for this dataset, as JSON files.  [Download it from GitHub](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data)
+* The raw data for this dataset, as JSON files.  [Clone the GitHub repository](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data).
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ To run this project you'll need to install the following software:
 * .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
 * Git command line tools ([download](https://git-scm.com/downloads)).
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
-* Access to a CrateDB cluster (see below for details).
+* Access to a cloud or local CrateDB cluster (see below for details).
 
 ## Getting a CrateDB Database
 
@@ -32,7 +32,16 @@ Create a database in the cloud by first pointing your browser at [`console.crate
 
 Login or create an account, then follow the prompts to create a "CRFREE" database on shared infrastructure in the cloud of your choice (choose from Amazon AWS, Microsoft Azure and Google Cloud).  Pick a region close to where you live to minimize latency between your machine running the code and the database that stores the data. 
 
-Once you've created your cluster, you'll see a "Download" button.  This downloads a text file containing a copy of your database hostname, port, username and password.  Make sure to download these as you'll need them later and won't see them again.
+Once you've created your cluster, you'll see a "Download" button.  This downloads a text file containing a copy of your database hostname, port, username and password.  Make sure to download these as you'll need them later and won't see them again.  Your credentials will look something like this example (exact values will vary based on your choice of AWS/Google Cloud/Azure etc):
+
+```
+Host:              some-host-name.gke1.us-central1.gcp.cratedb.net
+Port (PostgreSQL): 5432
+Port (HTTPS):      4200
+Database:          crate
+Username:          admin
+Password:          the-password-will-be-here
+```
 
 Wait until the cluster status shows a green status icon and "Healthy" status before continuing.  Note that it may take a few moments to provision your database.
 
@@ -184,6 +193,10 @@ Once you have the server running, point your browser at port 5213 and you should
 ```
 http://localhost:5213/
 ```
+
+## Interacting with the Project
+
+TODO details of how to interact with the project, maybe with images?
 
 ## Understanding the Code
 
