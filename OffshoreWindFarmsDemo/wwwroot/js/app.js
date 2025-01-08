@@ -61,7 +61,7 @@ async function showAllWindFarms() {
                   </tr>
                 </thead>
                 <tbody>
-                  ${data.map(item => '<tr><td>' + item.day + '</td><td>' + item.maxOutputPercentage + '%</td></tr>').join('')}
+                  ${data.map(item => '<tr><td>' + new Date(item.day).toLocaleDateString('en-UK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) + '</td><td>' + item.maxOutputPercentage + '%</td></tr>').join('')}
                 </tbody>
               </table>
             `);
