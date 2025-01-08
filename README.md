@@ -196,7 +196,13 @@ http://localhost:5213/
 
 ## Interacting with the Project
 
-TODO details of how to interact with the project, maybe with images?
+TODO details of how to interact with the project...
+
+![The user has clicked on the marker for Rampion wind farm](wind_farm_marker_clicked.png)
+
+![The user has clicked on the polygon for Triton Knoll wind farm](wind_farm_polygon_clicked.png)
+
+![Zoomed in further to show the turbine locations of several wind farms](wind_farm_turbines.png)
 
 ## Try out the API Calls
 
