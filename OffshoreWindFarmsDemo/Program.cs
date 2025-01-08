@@ -149,20 +149,23 @@ app.MapGet("/api/dailymaxpct/{id}/{days}", async (string id, int days) => {
 
     await using var reader = await command.ExecuteReaderAsync();
 
-    var data = new List<Object>();
+    if (reader.HasRows) {
+        var data = new List<Object>();
 
-    while (await reader.ReadAsync()) {
-        data.Add(new {
-            day = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
-            maxOutputPercentage = reader.GetDouble(1) 
+        while (await reader.ReadAsync()) {
+            data.Add(new {
+                day = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
+                maxOutputPercentage = reader.GetDouble(1) 
+            });
+
+        }
+
+        return Results.Ok(new {
+            results = data
         });
-
+    } else {
+        return Results.NotFound($"No data for windfarm ID: {id}");
     }
-
-    // TODO need a no data response here?
-    return Results.Ok(new {
-        results = data
-    });
 });
 
 app.Run();
