@@ -120,27 +120,24 @@ app.MapGet("/api/outputforday/{id}/{ts}", async (string id, long ts) => {
     await using var reader = await command.ExecuteReaderAsync();
 
     if (reader.HasRows) {
-        // TODO
+        var data = new List<Object>();
+
+        while (await reader.ReadAsync()) {
+            data.Add(
+                new {
+                    hour = reader.GetInt32(0),
+                    output = reader.GetDouble(1),
+                    cumulativeOutput = double.Parse(reader.GetDouble(2).ToString("N2")) // TODO: Can we do this in SQL?
+                }
+            );
+        }
+
+        return Results.Ok(new {
+            results = data
+        });
     } else {
-        // TODO
+        return Results.NotFound($"No data for windfarm ID: {id}.");
     }
-
-    var data = new List<Object>();
-
-    while (await reader.ReadAsync()) {
-        data.Add(
-            new {
-                hour = reader.GetInt32(0),
-                output = reader.GetDouble(1),
-                cumulativeOutput = double.Parse(reader.GetDouble(2).ToString("N2")) // TODO: Can we do this in SQL?
-            }
-        );
-    }
-
-    // TODO need a no data response here?
-    return Results.Ok(new {
-        results = data
-    });
 });
 
 app.MapGet("/api/dailymaxpct/{id}/{days}", async (string id, int days) => {
