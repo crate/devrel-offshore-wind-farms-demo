@@ -208,3 +208,7 @@ TODO.
 ### Front End Code
 
 TODO.
+
+## CrateDB Academy
+
+Want to learn more about CrateDB?  Take our free online "CrateDB Fundamentals" course, available now at the [CrateDB Academy](https://cratedb.com/academy/fundamentals/).
