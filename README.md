@@ -2,10 +2,9 @@
 
 ## Introduction
 
-TODO ADD GIF
-
 TODO
 
+![Demo showing front end interactions](demo.gif)
 
 Other resources that use this dataset include:
 
