@@ -244,15 +244,17 @@ docker compose down
 
 ## Understanding the Code
 
-TODO introduction.
-
 ### Server Code
 
-TODO.
+The server is written in C# and is contained in one file: `Program.cs`.  This contains a minmal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `wwwroot` folder.
+
+Database access is handled through [Npgsql](https://www.npgsql.org/index.html).
 
 ### Front End Code
 
-TODO.
+The front end uses the [Leaflet map framework](https://leafletjs.com/) with [OpenStreetMap](https://wiki.openstreetmap.org/wiki/OpenStreetMap_Carto) standard tiles.  [Font Awesome](https://fontawesome.com/) is also included in the project (for rendering icons).  The [Bulma CSS framework](https://bulma.io/) is used for styling and layout.
+
+The JavaScript code for the front end is contained in one file: `wwwroot/js/app.js`.  It uses the JavaScript [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to interact with the C# server.
 
 ## CrateDB Academy
 
