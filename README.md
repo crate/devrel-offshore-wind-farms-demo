@@ -196,11 +196,15 @@ http://localhost:5213/
 
 ## Interacting with the Project
 
-TODO details of how to interact with the project...
+When the project is first loaded, it displays a map of the UK with a blue marker for each wind farm.  Click on one of these markers to show a pop-up containing details about that wind farm's latest and monthly average outputs, as well as a table with the running total of the output for each hour of the most recent day in the dataset.
 
 ![The user has clicked on the marker for Rampion wind farm](wind_farm_marker_clicked.png)
 
+Next, zoom in a bit until the wind farm markers are replaced with polygons showing the boundaries of each wind farm.  Click on one of the polygons to see a marker containing data about the maximum output of the wind farm for the 10 most recent days in the dataset.
+
 ![The user has clicked on the polygon for Triton Knoll wind farm](wind_farm_polygon_clicked.png)
+
+Finally, zoom in some more to see the locations of individual turbines in the wind farms.  These markers are not clickable.
 
 ![Zoomed in further to show the turbine locations of several wind farms](wind_farm_turbines.png)
 
