@@ -21,6 +21,15 @@ To run this project you'll need to install the following software:
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
 * Access to a cloud or local CrateDB cluster (see below for details).
 
+## Getting the Code
+
+Next you'll need to get a copy of the code from GitHub by cloning the repository.  Open up your terminal and change directory to wherever you store coding projects, then enter the following commands:
+
+```bash
+git clone https://github.com/crate/devrel-offshore-wind-farms-demo.git
+cd devrel-offshore-wind-farms-demo
+```
+
 ## Getting a CrateDB Database
 
 You'll need a CrateDB database to store the project's data in.  Choose between a free hosted instance in the cloud, or run the database locally.  Either option is fine.
@@ -120,23 +129,15 @@ RETURN SUMMARY;
 
 Examine the output of this command once it's completed.  You should expect 75,825 records to have loaded with 0 errors.
 
-## Getting the Code
-
-Next you'll need to get a copy of the code from GitHub by cloning the repository.  Open up your terminal and change directory to wherever you store coding projects, then enter the following commands:
-
-```bash
-git clone https://github.com/crate/devrel-offshore-wind-farms-demo.git
-```
-
-This creates a new folder named `devrel-offshore-wind-farms-demo`.  You'll need to change directory as follows before running the project.
-
-```bash
-cd devrel-offshore-wind-farms-demo/OffshoreWindFarmsDemo
-```
-
 ## Configuring the Database Connection
 
 You'll need to configure the project to talk to your CrateDB database.  How you do this depends on whether you chose the cloud or local option...
+
+First, in your terminal, change directory to `OffshoreWindFarmsDemo`:
+
+```bash
+cd OffshoreWindFarmsDemo
+```
 
 ### Cloud Option
 
