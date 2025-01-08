@@ -14,26 +14,29 @@ app.MapGet("/api/windfarms", async () => {
     await using var command = dataSource.CreateCommand("SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC");
     await using var reader = await command.ExecuteReaderAsync();
 
-    // TODO can the database driver help with this?
-    var data = new List<Object>();
+    if (reader.HasRows) {
+        // TODO can the database driver help with this?
+        var data = new List<Object>();
 
-    while (await reader.ReadAsync()) {
-        data.Add(
-            new {
-                id = reader.GetString(0),
-                name = reader.GetString(1),
-                description = reader.GetString(2),
-                location = reader.GetFieldValue<NpgsqlPoint>(3),
-                boundaries = reader.GetFieldValue<JsonDocument>(4),
-                turbines = reader.GetFieldValue<JsonDocument>(5)
-            }
-        );
+        while (await reader.ReadAsync()) {
+            data.Add(
+                new {
+                    id = reader.GetString(0),
+                    name = reader.GetString(1),
+                    description = reader.GetString(2),
+                    location = reader.GetFieldValue<NpgsqlPoint>(3),
+                    boundaries = reader.GetFieldValue<JsonDocument>(4),
+                    turbines = reader.GetFieldValue<JsonDocument>(5)
+                }
+            );
+        }
+
+        return Results.Ok(new {
+            results = data
+        });
+    } else {
+        return Results.NotFound("No windfarm data found.");
     }
-
-    // TODO no data response needed here.
-    return Results.Ok(new {
-        results = data
-    });
 });
 
 app.MapGet("/api/latest/{id}", async (string id) => {
@@ -66,7 +69,7 @@ app.MapGet("/api/latest/{id}", async (string id) => {
             results = data
         });
     } else {
-        return Results.NotFound($"No such windfarm ID: {id}");
+        return Results.NotFound($"No such windfarm ID: {id}.");
     }
 });
 
@@ -97,7 +100,7 @@ app.MapGet("/api/avgpctformonth/{id}/{ts}", async (string id, long ts) => {
             results = data
         });
     } else {
-        return Results.NotFound($"No data for windfarm ID: {id}");
+        return Results.NotFound($"No data for windfarm ID: {id}.");
     }
 });
 
@@ -115,6 +118,12 @@ app.MapGet("/api/outputforday/{id}/{ts}", async (string id, long ts) => {
     };
 
     await using var reader = await command.ExecuteReaderAsync();
+
+    if (reader.HasRows) {
+        // TODO
+    } else {
+        // TODO
+    }
 
     var data = new List<Object>();
 
@@ -164,7 +173,7 @@ app.MapGet("/api/dailymaxpct/{id}/{days}", async (string id, int days) => {
             results = data
         });
     } else {
-        return Results.NotFound($"No data for windfarm ID: {id}");
+        return Results.NotFound($"No data for windfarm ID: {id}.");
     }
 });
 
