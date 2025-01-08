@@ -2,7 +2,7 @@
 
 ## Introduction
 
-TODO
+This ia a basic demo application that visualizes data in the UK Offshore wind farms example dataset.  Scroll around the map to see the locations of the wind farms and click on a marker to see details about that wind farm's performance.  Zoom in to see the boundaries of each wind farm as a polygon - click on that to display a pop up with additional data.  Finally, scroll in some more to see the locations of individual turbines.
 
 ![Demo showing front end interactions](demo.gif)
 
