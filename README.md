@@ -197,6 +197,16 @@ http://localhost:5213/
 
 TODO details of how to interact with the project, maybe with images?
 
+## Shutting Down
+
+To stop the application, press `Ctrl-C` in the terminal window that you started it from.
+
+If you're using Docker to run CrateDB, stop the container like so:
+
+```bash
+docker compose down
+```
+
 ## Understanding the Code
 
 TODO introduction.
