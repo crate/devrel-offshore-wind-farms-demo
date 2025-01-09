@@ -166,6 +166,23 @@ Edit the value of the key `CrateDB` in the `ConnectionStrings` object. Make the 
 * Replace `Username=crate` with `Username=admin`.
 * Replace `Password=` with the password for yuour cloud database (example `Password=sdfW234fwfTY^f`).
 
+After making your changes, your JSON should looke like this:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "CrateDB": "Host=my-cluster.gke1.us-central1.gcp.cratedb.net;Username=admin;Password=sdfW234fwfTY^f;Database=doc"
+  },
+  "AllowedHosts": "*"
+}
+```
+
 Save your changes.
 
 ### Local Option
