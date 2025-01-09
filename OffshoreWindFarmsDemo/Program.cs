@@ -15,7 +15,6 @@ app.MapGet("/api/windfarms", async () => {
     await using var reader = await command.ExecuteReaderAsync();
 
     if (reader.HasRows) {
-        // TODO can the database driver help with this?
         var data = new List<Object>();
 
         while (await reader.ReadAsync()) {
@@ -57,6 +56,7 @@ app.MapGet("/api/latest/{id}", async (string id) => {
 
     if (reader.HasRows) {
         var data = new List<Object>();
+        
         data.Add(new {
             timestamp = ((DateTimeOffset)reader.GetDateTime(0)).ToUnixTimeMilliseconds(),
             day = ((DateTimeOffset)reader.GetDateTime(1)).ToUnixTimeMilliseconds(),
