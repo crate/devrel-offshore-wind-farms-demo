@@ -112,7 +112,7 @@ Right now your database tables are empty.  Let's add some sample data!  Copy and
 
 ```sql
 COPY windfarms                                 
-FROM 'https://github.com/crate/cratedb-datasets/raw/main/devrel/uk-offshore-wind-farm-data/wind_farms.json'
+FROM 'https://cdn.crate.io/downloads/datasets/cratedb-datasets/devrel/uk-offshore-wind-farm-data/wind_farms.json'
 RETURN SUMMARY;
 ```
 
@@ -122,7 +122,7 @@ Next, let's load the sample power generation data into the `windfarm_output` tab
 
 ```sql
 COPY windfarm_output
-FROM 'https://github.com/crate/cratedb-datasets/raw/main/devrel/uk-offshore-wind-farm-data/wind_farm_output.json.gz' 
+FROM 'https://cdn.crate.io/downloads/datasets/cratedb-datasets/devrel/uk-offshore-wind-farm-data/wind_farm_output.json.gz' 
 WITH (compression='gzip')
 RETURN SUMMARY;
 ```
