@@ -9,8 +9,6 @@ load_dotenv()
 app = Flask(__name__)
 
 # Connect to CrateDB.
-# TODO catch error and shutdown.
-# TODO use connection pool....
 conn = client.connect(os.environ["CRATEDB_URL"])
 
 @app.route("/api/windfarms")
