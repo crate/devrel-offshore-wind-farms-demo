@@ -163,5 +163,4 @@ def homepage():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    # TODO configure Flask port.
-    app.run(port=8000)
+    app.run(port=os.environ["PORT"])
