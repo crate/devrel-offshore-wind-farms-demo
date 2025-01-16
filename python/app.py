@@ -10,6 +10,7 @@ app = Flask(__name__)
 # Connect to CrateDB.
 # TODO make this configurable.
 # TODO catch error and shutdown.
+# TODO use connection pool....
 conn = client.connect("http://localhost:4200", username="crate", password="", verify_ssl_cert=False)
 
 @app.route("/api/windfarms")
@@ -104,9 +105,34 @@ def get_avg_windfarm_pct_for_month(id, ts):
 def get_windfarm_output_for_day(id, ts):
     return "TODO"
 
-@app.route("/api/dailymaxpct/{string:id}/{int:days}")
+@app.route("/api/dailymaxpct/<string:id>/<int:days>")
 def get_windfarm_max_pct_for_day(id, days):
-    return "TODO"
+    results = { "results": [] }
+
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT day, max(outputpercentage) FROM windfarm_output WHERE windfarmid = ? GROUP BY day ORDER BY day DESC LIMIT ?",
+            (id, days)
+        )
+
+        # TODO check if this should be a rowcount or not.
+        if cursor.rowcount == 0:
+            abort(404, f"No data for windfarm ID: {id}.")
+
+        rows = cursor.fetchall()
+
+        for row in rows:
+            results["results"].append({
+                "day": row[0],
+                "maxOutputPercentage": row[1]
+            })
+
+    finally:
+        cursor.close()
+        
+    return results
 
 @app.route("/")
 def homepage():
