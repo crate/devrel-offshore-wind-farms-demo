@@ -6,6 +6,26 @@ TODO
 
 ## TODO MISSING SECTIONS
 
+## Configuring the Database Connection
+
+You'll need to configure the project to talk to your CrateDB database.  How you do this depends on whether you chose the cloud or local option...
+
+TODO
+
+## Running the Project
+
+Start the application like this:
+
+```bash
+python app.py
+```
+
+Once you have the server running, point your browser at port 8000 and you should see the map front end:
+
+```
+http://localhost:8000/
+```
+
 ## Interacting with the Project
 
 When the project is first loaded, it displays a map of the UK with a blue marker for each wind farm.  Click on one of these markers to show a pop-up containing details about that wind farm's latest and monthly average outputs, as well as a table with the running total of the output for each hour of the most recent day in the dataset.
