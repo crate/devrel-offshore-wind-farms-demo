@@ -24,8 +24,6 @@ def get_windfarms():
         if cursor.rowcount == 0:
             abort(404, "No windfarm data found.")
 
-        # Desired return value shape:
-        # { results: [ array of objects for each wind farm] }
         for windfarm in cursor.fetchall():
             result = {
                 "id": windfarm[0],
@@ -48,7 +46,33 @@ def get_windfarms():
 
 @app.route("/api/latest/<string:id>")
 def get_latest_for_windfarm(id):
-    return "TODO"
+    results = { "results": [] }
+
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT ts, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = ? ORDER BY ts DESC LIMIT 1", 
+            (id,)
+        )
+
+        if cursor.rowcount == 0:
+            abort(404, f"No such windfarm ID: {id}.")
+
+        result = cursor.fetchone()
+
+        results["results"].append({
+            "timestamp": result[0],
+            "day": result[1],
+            "month": result[2],
+            "output": result[3],
+            "outputPercentage": result[4] 
+        })
+
+    finally:
+        cursor.close()
+        
+    return results
 
 @app.route("/api/avgpctformonth/<string:id>/<int:ts>")
 def get_avg_windfarm_pct_for_month(id, ts):
