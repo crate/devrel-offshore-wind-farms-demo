@@ -103,7 +103,32 @@ def get_avg_windfarm_pct_for_month(id, ts):
 
 @app.route("/api/outputforday/<string:id>/<int:ts>")
 def get_windfarm_output_for_day(id, ts):
-    return "TODO"
+    results = { "results": [] }
+
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT extract(hour from ts) as hour, output, sum(output) OVER (ORDER BY ts ASC) FROM windfarm_output WHERE windfarmid = ? AND day = ? ORDER BY hour ASC",
+            (id, ts)
+        )
+
+        if cursor.rowcount == 0:
+            abort(404, f"No data for windfarm ID: {id}.")
+
+        rows = cursor.fetchall()
+
+        for row in rows:
+            results["results"].append({
+                "hour": row[0],
+                "output": row[1],
+                "cumulativeOutput": round(row[2], 2)
+            })
+
+    finally:
+        cursor.close()
+        
+    return results
 
 @app.route("/api/dailymaxpct/<string:id>/<int:days>")
 def get_windfarm_max_pct_for_day(id, days):
@@ -117,7 +142,6 @@ def get_windfarm_max_pct_for_day(id, days):
             (id, days)
         )
 
-        # TODO check if this should be a rowcount or not.
         if cursor.rowcount == 0:
             abort(404, f"No data for windfarm ID: {id}.")
 
