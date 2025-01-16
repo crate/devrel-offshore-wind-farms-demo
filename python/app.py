@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from flask import Flask, abort, render_template
 from crate import client
+import os
 
 # Load environment variables / secrets from .env file.
 load_dotenv()
@@ -8,10 +9,14 @@ load_dotenv()
 app = Flask(__name__)
 
 # Connect to CrateDB.
-# TODO make this configurable.
 # TODO catch error and shutdown.
 # TODO use connection pool....
-conn = client.connect("http://localhost:4200", username="crate", password="", verify_ssl_cert=False)
+conn = client.connect(
+    f"http{"" if os.environ['CRATEDB_USE_SSL'] == "false" else "s"}://{os.environ['CRATEDB_HOST']}:{os.environ['CRATEDB_PORT']}", 
+    username=os.environ["CRATEDB_USER"], 
+    password=os.environ["CRATEDB_PASSWORD"], 
+    verify_ssl_cert=False if os.environ["CRATEDB_USE_SSL"] == "false" else True
+)
 
 @app.route("/api/windfarms")
 def get_windfarms():
