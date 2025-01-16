@@ -59,7 +59,7 @@ def get_latest_for_windfarm(id):
         if cursor.rowcount == 0:
             abort(404, f"No such windfarm ID: {id}.")
 
-        result = cursor.fetchone()
+        result = cursor.fetchone()            
 
         results["results"].append({
             "timestamp": result[0],
@@ -76,7 +76,29 @@ def get_latest_for_windfarm(id):
 
 @app.route("/api/avgpctformonth/<string:id>/<int:ts>")
 def get_avg_windfarm_pct_for_month(id, ts):
-    return "TODO"
+    results = { "results": [] }
+
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT trunc(avg(outputpercentage), 2) FROM windfarm_output WHERE windfarmid = ? and month = ?",
+            (id, ts)
+        )
+
+        result = cursor.fetchone()
+
+        if result[0] is None:
+            abort(404, f"No such windfarm ID: {id}.")
+
+        results["results"].append({
+            "avgPct": result[0]
+        })
+
+    finally:
+        cursor.close()
+        
+    return results
 
 @app.route("/api/outputforday/<string:id>/<int:ts>")
 def get_windfarm_output_for_day(id, ts):
