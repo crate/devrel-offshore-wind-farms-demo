@@ -12,7 +12,7 @@ Other resources that use this dataset include:
 * A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
 * The raw data for this dataset, as JSON files.  [Clone the GitHub repository](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data).
 
-Backend servers for this project have been built using C# and Python.
+Backend servers implementations for this project are available for C# and Python.
 
 ## Prerequisites
 
@@ -133,7 +133,10 @@ Examine the output of this command once it's completed.  You should expect 75,82
 
 ## Configuring and Starting the Backend Server
 
-TODO
+The backend server for this project has two different implementations, each with their own instructions.
+
+* To use C#, follow the instructions [here](dotnet/README.md).
+* To use Python, follow the instructions [here](dotnet/README.md).
 
 ## Understanding the Code
 
@@ -147,7 +150,9 @@ Database access is handled through [Npgsql](https://www.npgsql.org/index.html).
 
 #### Python Version
 
-TODO
+The server is written in Python as a [Flask framework](https://flask.palletsprojects.com/) application.  The code is contained in one file: `app.py`.  This contains a minimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `static` folder.
+
+Database access is handled through [crate-python](https://github.com/crate/crate-python/).
 
 ### Front End Code
 
