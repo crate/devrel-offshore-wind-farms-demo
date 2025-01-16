@@ -2,7 +2,7 @@
 
 ## Introduction
 
-TODO
+Follow the instructions below to configure and run the C# implementation of this project.  You'll need to have completed the instructions in the [main README](../README.md) first and should have created a CrateDB database and loaded the example data into it.
 
 ## Configuring the Database Connection
 
