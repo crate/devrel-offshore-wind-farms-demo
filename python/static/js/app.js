@@ -42,8 +42,6 @@ async function showAllWindFarms() {
         layer.on({
           click: async function (e) {
             const props = e.target.feature.properties;
-            console.log(props.windFarm.id);
-
             const dataResponse = await fetch(`/api/dailymaxpct/${props.windFarm.id}/10`);
             const dataJson = await dataResponse.json();
             const data = dataJson.results;
