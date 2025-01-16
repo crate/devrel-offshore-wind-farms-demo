@@ -2,5 +2,7 @@
 *.tmp
 *.swp
 *.bak
+*.pyc
+venv/
 bin/
 obj/
