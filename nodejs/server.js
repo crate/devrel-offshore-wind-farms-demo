@@ -1,7 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
 
-const { PORT, CRATE_URL } = process.env;
+const { PORT, CRATEDB_URL } = process.env;
+
+// Run a SQL statement in CrateDB and capture the response.
+async function executeSQL(sqlStmt) {
+  // TODO
+}
 
 // Initialize Express.
 const app = express();
