@@ -136,7 +136,7 @@ Examine the output of this command once it's completed.  You should expect 75,82
 The backend server for this project has two different implementations, each with their own instructions.
 
 * To use C#, follow the instructions [here](dotnet/README.md).
-* To use Python, follow the instructions [here](dotnet/README.md).
+* To use Python, follow the instructions [here](python/README.md).
 
 ## Understanding the Code
 
