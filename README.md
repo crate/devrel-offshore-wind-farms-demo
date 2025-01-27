@@ -8,6 +8,7 @@ This ia a basic demo application that visualizes data in the UK Offshore wind fa
 
 Other resources that use this dataset include:
 
+* A video of a live stream introducing CrateDB and looking at the C# code for this project.  [Watch it on YouTube](https://www.youtube.com/watch?v=K4zBhJhSFCY).
 * A conference talk from the AI and Big Data Expo, Amsterdam 2024.  [Watch it on YouTube](https://www.youtube.com/watch?v=xqiLGjaTlBk).
 * A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
 * The raw data for this dataset, as JSON files.  [Clone the GitHub repository](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data).
