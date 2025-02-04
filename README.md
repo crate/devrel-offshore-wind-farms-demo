@@ -19,8 +19,8 @@ Backend servers implementations for this project are available for C# and Python
 
 To run this project you'll need to install the following software:
 
-* (C# version) .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
-* (Python version) Python 3 ([download](https://www.python.org/downloads/)) - we've tested this project with Python 3.12 on macOS Sequoia.
+* .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
+* Python 3 ([download](https://www.python.org/downloads/)) - we've tested this project with Python 3.12 on macOS Sequoia.
 * Git command line tools ([download](https://git-scm.com/downloads)).
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
 * Access to a cloud or local CrateDB cluster (see below for details).
