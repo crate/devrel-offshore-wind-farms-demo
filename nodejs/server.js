@@ -9,16 +9,13 @@ const { Client } = pg;
 const client = new Client(CRATEDB_URL);
 await client.connect();
 
+// TODO remove this example query...
 const res = await client.query('SELECT * FROM windfarms WHERE territory=$1', ['Scotland']);
 
-for (const windFarm of res.rows) {
-  console.log(windFarm);
-}
-
-// Run a SQL statement in CrateDB and capture the response.
-async function executeSQL(sqlStmt) {
-  // TODO
-}
+console.log(res);
+// for (const windFarm of res.rows) {
+//   console.log(windFarm);
+// }
 
 // Initialize Express.
 const app = express();
@@ -26,8 +23,14 @@ app.use(express.static('static'));
 app.use(express.json());
 
 app.get('/api/windfarms', async (req, res) => {
-  // "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC"
-  res.sendStatus('TODO');
+  // TODO exception handling!
+  const resultSet = await client.query('SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC');
+
+  if (resultSet.rowCount === 0) {
+    return res.sendStatus(404, 'No windfarm data found.');
+  }
+
+  res.json({ results: resultSet.rows });
 });
 
 app.get('/api/latest/:id', async (req, res) => {
