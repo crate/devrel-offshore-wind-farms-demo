@@ -58,8 +58,18 @@ app.get('/api/latest/:id', async (req, res) => {
 });
 
 app.get('/api/avgpctformonth/:id/:ts', async (req, res) => {
-  // "SELECT trunc(avg(outputpercentage), 2) FROM windfarm_output WHERE windfarmid = ? and month = ?"
-  res.sendStatus('TODO');
+  const resultSet = await pool.query(
+    'SELECT trunc(avg(outputpercentage), 2) AS avgoutputpct FROM windfarm_output WHERE windfarmid = $1 and month = $2',
+    [ req.params.id, req.params.ts ]
+  );
+
+  const avgOutputPct = resultSet.rowCount === 0 ? null : resultSet.rows[0].avgoutputpct;
+
+  if (avgOutputPct === null) {
+    return res.status(404).send(`No such windfarm ID: ${req.params.id}.`);
+  }
+
+  res.json({ results: [ { avgPct: resultSet.rows[0].avgoutputpct }] });
 });
 
 app.get('/api/outputforday/:id/:ts', async (req, res) => {
