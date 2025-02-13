@@ -2,17 +2,21 @@ import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
 
-const { PORT, CRATEDB_URL } = process.env;
-const { Client } = pg;
+const { PORT } = process.env;
+const { Pool } = pg;
 
 // Connect to CrateDB.
-const client = new Client(CRATEDB_URL);
-await client.connect();
+const pool = new Pool();
+
+pool.on('error', (err, client) => {
+  console.error('Unexpected error in idle database client:', err);
+});
+
 
 // TODO remove this example query...
-const res = await client.query('SELECT * FROM windfarms WHERE territory=$1', ['Scotland']);
+//const res = await client.query('SELECT * FROM windfarms WHERE territory=$1', ['Scotland']);
 
-console.log(res);
+//console.log(res);
 // for (const windFarm of res.rows) {
 //   console.log(windFarm);
 // }
@@ -23,19 +27,34 @@ app.use(express.static('static'));
 app.use(express.json());
 
 app.get('/api/windfarms', async (req, res) => {
-  // TODO exception handling!
-  const resultSet = await client.query('SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC');
+  const resultSet = await pool.query(
+    'SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC'
+  );
 
   if (resultSet.rowCount === 0) {
-    return res.sendStatus(404, 'No windfarm data found.');
+    return res.sendStatus(404).send('No windfarm data found.');
   }
 
   res.json({ results: resultSet.rows });
 });
 
 app.get('/api/latest/:id', async (req, res) => {
-  // "SELECT ts, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = ? ORDER BY ts DESC LIMIT 1"
-  res.sendStatus('TODO');
+  const resultSet = await pool.query(
+    'SELECT ts AS timestamp, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1',
+    [ req.params.id ]
+  );
+
+  if (resultSet.rowCount === 0) {
+    return res.status(404).send(`No such windfarm ID: ${req.params.id}.`);
+  }
+
+  res.json({ results: {
+    timestamp: resultSet.rows[0].timestamp.getTime(),
+    day: resultSet.rows[0].day.getTime(),
+    month: resultSet.rows[0].month.getTime(),
+    output: resultSet.rows[0].output,
+    outputPercentage: resultSet.rows[0].outputpercentage,
+  }});
 });
 
 app.get('/api/avgpctformonth/:id/:ts', async (req, res) => {
