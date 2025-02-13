@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This ia a basic demo application that visualizes data in the UK Offshore wind farms example dataset.  Scroll around the map to see the locations of the wind farms and click on a marker to see details about that wind farm's performance.  Zoom in to see the boundaries of each wind farm as a polygon - click on that to display a pop up with additional data.  Finally, scroll in some more to see the locations of individual turbines.
+This is a basic demo application that visualizes data in the UK Offshore wind farms example dataset.  Scroll around the map to see the locations of the wind farms and click on a marker to see details about that wind farm's performance.  Zoom in to see the boundaries of each wind farm as a polygon - click on that to display a pop up with additional data.  Finally, scroll in some more to see the locations of individual turbines.
 
 ![Demo showing front end interactions](demo.gif)
 
@@ -13,14 +13,15 @@ Other resources that use this dataset include:
 * A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
 * The raw data for this dataset, as JSON files.  [Clone the GitHub repository](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data).
 
-Backend servers implementations for this project are available for C# and Python.
+Backend servers implementations for this project are available for C#, Python and Node.js.
 
 ## Prerequisites
 
 To run this project you'll need to install the following software:
 
-* .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
-* Python 3 ([download](https://www.python.org/downloads/)) - we've tested this project with Python 3.12 on macOS Sequoia.
+* (C# version) .NET SDK ([download](https://dotnet.microsoft.com/en-us/download)) - we've tested this project with version 9.0 on macOS Sequoia.
+* (Python version) Python 3 ([download](https://www.python.org/downloads/)) - we've tested this project with Python 3.12 on macOS Sequoia.
+* (Node.js version) Node.js ([download](https://nodejs.org/en/download)) - we've tested this project with Node.js 22 on macOS Sequoia.
 * Git command line tools ([download](https://git-scm.com/downloads)).
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
 * Access to a cloud or local CrateDB cluster (see below for details).
@@ -138,6 +139,7 @@ The backend server for this project has two different implementations, each with
 
 * To use C#, follow the instructions [here](dotnet/README.md).
 * To use Python, follow the instructions [here](python/README.md).
+* To use Node.js, follow the instructions [here](nodejs/README.md).
 
 ## Understanding the Code
 
@@ -154,6 +156,12 @@ Database access is handled through [Npgsql](https://www.npgsql.org/index.html).
 The server is written in Python as a [Flask framework](https://flask.palletsprojects.com/) application.  The code is contained in one file: `app.py`.  This contains a minimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `static` folder.
 
 Database access is handled through [crate-python](https://github.com/crate/crate-python/).
+
+#### Node.js Version
+
+The server is written in JavaScript using the [Express framework](https://expressjs.com/).  The code is contained in a single file: `server.js`.  This contains a mimimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `static` folder.
+
+Database access is handled using the [node-postgres](https://node-postgres.com/) driver.
 
 ### Front End Code
 
