@@ -39,13 +39,16 @@ app.get('/api/latest/:id', async (req, res) => {
     return res.status(404).send(`No such windfarm ID: ${req.params.id}.`);
   }
 
-  res.json({ results: {
-    timestamp: resultSet.rows[0].timestamp.getTime(),
-    day: resultSet.rows[0].day.getTime(),
-    month: resultSet.rows[0].month.getTime(),
-    output: resultSet.rows[0].output,
-    outputPercentage: resultSet.rows[0].outputpercentage,
-  }});
+  res.json({ 
+    results: [
+      {
+        timestamp: resultSet.rows[0].timestamp.getTime(),
+        day: resultSet.rows[0].day.getTime(),
+        month: resultSet.rows[0].month.getTime(),
+        output: resultSet.rows[0].output,
+        outputPercentage: resultSet.rows[0].outputpercentage,
+      }
+  ]});
 });
 
 app.get('/api/avgpctformonth/:id/:ts', async (req, res) => {
