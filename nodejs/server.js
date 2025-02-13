@@ -73,8 +73,26 @@ app.get('/api/avgpctformonth/:id/:ts', async (req, res) => {
 });
 
 app.get('/api/outputforday/:id/:ts', async (req, res) => {
-  // "SELECT extract(hour from ts) as hour, output, sum(output) OVER (ORDER BY ts ASC) FROM windfarm_output WHERE windfarmid = ? AND day = ? ORDER BY hour ASC"
-  res.sendStatus('TODO');
+  const resultSet = await pool.query(
+    'SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = $1 AND day = $2 ORDER BY hour ASC',
+    [ req.params.id, req.params.ts ]  
+  );
+
+  if (resultSet.rowCount === 0) {
+    return res.status(404).send(`No data for windfarm ID: ${req.params.id}.`);
+  }
+
+  const results = [];
+
+  for (const result of resultSet.rows) {
+    results.push({
+      hour: result.hour,
+      output: result.output,
+      cumulativeOutput: result.cumulativeoutput
+    });
+  }
+
+  res.json({ results });
 });
 
 app.get('/api/dailymaxpct/:id/:days', async (req, res) => {
