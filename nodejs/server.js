@@ -12,15 +12,6 @@ pool.on('error', (err, client) => {
   console.error('Unexpected error in idle database client:', err);
 });
 
-
-// TODO remove this example query...
-//const res = await client.query('SELECT * FROM windfarms WHERE territory=$1', ['Scotland']);
-
-//console.log(res);
-// for (const windFarm of res.rows) {
-//   console.log(windFarm);
-// }
-
 // Initialize Express.
 const app = express();
 app.use(express.static('static'));
@@ -96,8 +87,25 @@ app.get('/api/outputforday/:id/:ts', async (req, res) => {
 });
 
 app.get('/api/dailymaxpct/:id/:days', async (req, res) => {
-  // "SELECT day, max(outputpercentage) FROM windfarm_output WHERE windfarmid = ? GROUP BY day ORDER BY day DESC LIMIT ?"
-  res.sendStatus('TODO');
+  const resultSet = await pool.query(
+    'SELECT day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2',
+    [ req.params.id, req.params.days ]  
+  );
+
+  if (resultSet.rowCount === 0) {
+    return res.status(404).send(`No data for windfarm ID: ${req.params.id}.`);
+  }
+
+  const results = [];
+
+  for (const result of resultSet.rows) {
+    results.push({
+      day: result.day.getTime(),
+      maxOutputPercentage: result.maxoutputpercentage
+    });
+  }
+
+  res.json({ results });
 });
 
 // Start the Express server.
