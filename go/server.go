@@ -18,8 +18,25 @@ func main() {
 	app := fiber.New()
 	app.Static("/", "./public")
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+	app.Get("/api/windfarms", func(c *fiber.Ctx) error {
+		return c.SendString("TODO")
+	})
+
+	app.Get("/api/latest/:id", func(c *fiber.Ctx) error {
+		// c.Params("id")
+		return c.SendString("TODO")
+	})
+
+	app.Get("/api/avgpctformonth/:id/:ts", func(c *fiber.Ctx) error {
+		return c.SendString("TODO")
+	})
+
+	app.Get("/api/outputforday/:id/:ts", func(c *fiber.Ctx) error {
+		return c.SendString("TODO")
+	})
+
+	app.Get("/api/dailymaxpct/:id/:days", func(c *fiber.Ctx) error {
+		return c.SendString("TODO")
 	})
 
 	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))
