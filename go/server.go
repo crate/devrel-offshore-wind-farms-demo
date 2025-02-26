@@ -20,11 +20,9 @@ func main() {
 
 	// Connect to CrateDB.
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("CRATEDB_URL"))
-
 	if err != nil {
 		log.Fatalf("Error connecting to CrateDB: %v", err)
 	}
-
 	defer dbpool.Close()
 
 	app := fiber.New()
