@@ -23,7 +23,7 @@ TODO
 Start the application like this:
 
 ```bash
-TODO
+go run server.go
 ```
 
 Once you have the server running, point your browser at port TODO and you should see the map front end:
