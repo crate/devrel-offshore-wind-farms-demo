@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
@@ -30,6 +31,16 @@ func main() {
 	app.Static("/", "./public")
 
 	app.Get("/api/windfarms", func(c *fiber.Ctx) error {
+		type windfarm struct {
+			Id          string `json:"id"`
+			Name        string `json:"name"`
+			Description string `json:"description"`
+			// TODO map these
+			//location
+			//boundaries
+			//turbines
+		}
+
 		conn, err := dbpool.Acquire(context.Background())
 
 		if err != nil {
@@ -37,14 +48,21 @@ func main() {
 		}
 		defer conn.Release()
 
-		rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC")
+		// TODO add extra columns back to the query.
+		//rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC")
+		rows, err := conn.Query(context.Background(), "SELECT id, name, description FROM windfarms ORDER BY id ASC")
 		if err != nil {
 			log.Fatalf("Error running query: %v", err)
 		}
 		defer rows.Close()
 
+		windfarms, err := pgx.CollectRows(rows, pgx.RowToStructByName[windfarm])
+		if err != nil {
+			log.Fatalf("Error collecting rows: %v", err)
+		}
+
 		return c.JSON(&fiber.Map{
-			"results": nil,
+			"results": windfarms,
 		})
 	})
 
