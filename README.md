@@ -173,7 +173,7 @@ Database access is handled using the [pgx](https://github.com/jackc/pgx) driver.
 
 ### Front End Code
 
-The front end is the same for both the C# and Python versions of the project.  It uses the [Leaflet map framework](https://leafletjs.com/) with [OpenStreetMap](https://wiki.openstreetmap.org/wiki/OpenStreetMap_Carto) standard tiles.  [Font Awesome](https://fontawesome.com/) is also included in the project (for rendering icons).  The [Bulma CSS framework](https://bulma.io/) is used for styling and layout.
+The front end is the same for each of the backend implementations of the project.  It uses the [Leaflet map framework](https://leafletjs.com/) with [OpenStreetMap](https://wiki.openstreetmap.org/wiki/OpenStreetMap_Carto) standard tiles.  [Font Awesome](https://fontawesome.com/) is also included in the project (for rendering icons).  The [Bulma CSS framework](https://bulma.io/) is used for styling and layout.
 
 The JavaScript code for the front end is contained in one file.  For the C# project, this is `wwwroot/js/app.js` and for the Python project it is `static/js/app.js`.  It uses the JavaScript [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to interact with the C# server.
 
