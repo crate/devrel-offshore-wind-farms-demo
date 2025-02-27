@@ -33,9 +33,9 @@ func main() {
 			Id          string `json:"id"`
 			Name        string `json:"name"`
 			Description string `json:"description"`
-			//Location []float32 `json:"location"` // TODO this needs to be mapped properly.
-			Boundaries any `json:"boundaries"`
-			Turbines   any `json:"turbines"`
+			Location    any    `json:"location"` // TODO this needs to be mapped properly (object with x, y keys).
+			Boundaries  any    `json:"boundaries"`
+			Turbines    any    `json:"turbines"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
@@ -45,9 +45,7 @@ func main() {
 		}
 		defer conn.Release()
 
-		// TODO add extra columns back to the query.
-		//rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC")
-		rows, err := conn.Query(context.Background(), "SELECT id, name, description, boundaries, turbines FROM windfarms ORDER BY id ASC")
+		rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC")
 		if err != nil {
 			log.Fatalf("Error running query: %v", err)
 		}
