@@ -30,12 +30,14 @@ func main() {
 
 	app.Get("/api/windfarms", func(c *fiber.Ctx) error {
 		type windfarm struct {
-			Id          string `json:"id"`
-			Name        string `json:"name"`
-			Description string `json:"description"`
-			Location    any    `json:"location"` // TODO this needs to be mapped properly (object with x, y keys).
-			Boundaries  any    `json:"boundaries"`
-			Turbines    any    `json:"turbines"`
+			Id          string  `json:"id"`
+			Name        string  `json:"name"`
+			Description string  `json:"description"`
+			Location    any     `json:"location"` // TODO this needs to be mapped properly (object with x, y keys).
+			X           float64 `json:"x"`        // TODO how to get these into an object named location?
+			Y           float64 `json:"y"`        // TODO how to get these into an object named location?
+			Boundaries  any     `json:"boundaries"`
+			Turbines    any     `json:"turbines"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
@@ -45,7 +47,7 @@ func main() {
 		}
 		defer conn.Release()
 
-		rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC")
+		rows, err := conn.Query(context.Background(), "SELECT id, name, description, location, longitude(location) as x, latitude(location) as y, boundaries, turbines FROM windfarms ORDER BY id ASC")
 		if err != nil {
 			log.Fatalf("Error running query: %v", err)
 		}
