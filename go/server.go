@@ -34,8 +34,8 @@ func main() {
 			Name        string `json:"name"`
 			Description string `json:"description"`
 			//Location []float32 `json:"location"` // TODO this needs to be mapped properly.
-			Boundaries string `json:"boundaries"` // TODO this needs to be JSON not text.
-			Turbines   string `json:"turbines"`   // TODO this needs to be JSON not text.
+			Boundaries any `json:"boundaries"`
+			Turbines   any `json:"turbines"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
