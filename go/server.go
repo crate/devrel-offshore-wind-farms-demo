@@ -34,8 +34,8 @@ func main() {
 			Name        string `json:"name"`
 			Description string `json:"description"`
 			Location    struct {
-				X float64 `json:"x" db:"x"`
-				Y float64 `json:"y" db:"y"`
+				X float64 `json:"x" db:"x"` // Outputs 0
+				Y float64 `json:"y" db:"y"` // Outputs 0
 			} `json:"location" db:"-"`
 			X          float64 `json:"-" db:"x"`
 			Y          float64 `json:"-" db:"y"`
