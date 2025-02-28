@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
@@ -55,6 +57,8 @@ func main() {
 
 		windfarms := []windfarm{}
 
+		// TODO what if there are 0 results?
+
 		for rows.Next() {
 			windfarm := windfarm{}
 			err := rows.Scan(&windfarm.Id, &windfarm.Name, &windfarm.Description, &windfarm.Location.X, &windfarm.Location.Y, &windfarm.Boundaries, &windfarm.Turbines)
@@ -73,24 +77,81 @@ func main() {
 
 	app.Get("/api/latest/:id", func(c *fiber.Ctx) error {
 		// c.Params("id")
+		// "SELECT ts AS timestamp, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1"
+
+		type result struct {
+			Timestamp        time.Time `json:"timestamp"` // TODO this outputs a String, need UNIX time.
+			Day              time.Time `json:"day"`       // TODO this outputs a String, need UNIX time.
+			Month            time.Time `json:"month"`     // TODO this outputs a String, need UNIX time.
+			Output           float32   `json:"output"`
+			OutputPercentage float32   `json:"outputPercentage"`
+		}
+
+		conn, err := dbpool.Acquire(context.Background())
+
+		if err != nil {
+			log.Fatalf("Error acquiring connection: %v", err)
+		}
+		defer conn.Release()
+
+		rows, err := conn.Query(context.Background(), "SELECT ts AS timestamp, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1", c.Params("id"))
+		if err != nil {
+			log.Fatalf("Error running query: %v", err)
+		}
+
+		// Use collect here...
+		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
+		if err != nil {
+			log.Fatalf("Error collecting rows: %v", err)
+		}
+
+		// TODO what if there are 0 results?
+
 		return c.JSON(&fiber.Map{
-			"results": nil,
+			"results": results,
 		})
 	})
 
 	app.Get("/api/avgpctformonth/:id/:ts", func(c *fiber.Ctx) error {
+		// "SELECT trunc(avg(outputpercentage), 2) AS avgoutputpct FROM windfarm_output WHERE windfarmid = $1 and month = $2"
+
+		conn, err := dbpool.Acquire(context.Background())
+
+		if err != nil {
+			log.Fatalf("Error acquiring connection: %v", err)
+		}
+		defer conn.Release()
+
 		return c.JSON(&fiber.Map{
 			"results": nil,
 		})
 	})
 
 	app.Get("/api/outputforday/:id/:ts", func(c *fiber.Ctx) error {
+		// "SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = $1 AND day = $2 ORDER BY hour ASC"
+
+		conn, err := dbpool.Acquire(context.Background())
+
+		if err != nil {
+			log.Fatalf("Error acquiring connection: %v", err)
+		}
+		defer conn.Release()
+
 		return c.JSON(&fiber.Map{
 			"results": nil,
 		})
 	})
 
 	app.Get("/api/dailymaxpct/:id/:days", func(c *fiber.Ctx) error {
+		// "SELECT day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2"
+
+		conn, err := dbpool.Acquire(context.Background())
+
+		if err != nil {
+			log.Fatalf("Error acquiring connection: %v", err)
+		}
+		defer conn.Release()
+
 		return c.JSON(&fiber.Map{
 			"results": nil,
 		})
