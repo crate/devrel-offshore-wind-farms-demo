@@ -136,7 +136,7 @@ func main() {
 	})
 
 	app.Get("/api/dailymaxpct/:id/:days", func(c *fiber.Ctx) error {
-		// "SELECT day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2"
+		// "SELECT day::long as day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2"
 
 		conn, err := dbpool.Acquire(context.Background())
 
