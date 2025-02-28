@@ -167,7 +167,7 @@ Database access is handled using the [node-postgres](https://node-postgres.com/)
 
 #### Go Version
 
-TODO.
+The server is written in Go using the [Fiber framework](https://docs.gofiber.io/).  The code is contained in a single file: `server.go`.  This contains a minimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `public` folder.
 
 Database access is handled using the [pgx](https://github.com/jackc/pgx) driver.
 
