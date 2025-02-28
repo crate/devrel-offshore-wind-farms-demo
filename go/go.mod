@@ -1,4 +1,4 @@
-module github.com/crate/devrel-offshort-wind-farms-demo
+module github.com/crate/devrel-offshore-wind-farms-demo
 
 go 1.24.0
 
