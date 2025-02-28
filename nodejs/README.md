@@ -36,7 +36,7 @@ Edit this file as follows:
 
 * Set the value of `PGUSER` to `admin`.
 * Set the value of `PGPASSWORD` to your cloud database password (example `sdfW234fwfTY^f`).
-* Set the value of `PGHOTS` to the hostname for your cloud database (example `my-cluster.gke1.us-central1.gcp.cratedb.net`).
+* Set the value of `PGHOST` to the hostname for your cloud database (example `my-cluster.gke1.us-central1.gcp.cratedb.net`).
 
 Save your changes.
 
