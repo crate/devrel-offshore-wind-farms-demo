@@ -2,21 +2,49 @@
 
 ## Introduction
 
-TODO
+Follow the instructions below to configure and run the Go implementation of this project.  You'll need to have completed the instructions in the [main README](../README.md) first and should have created a CrateDB database and loaded the example data into it.
 
 ## Configuring the Database Connection
 
-You'll need to configure the project to talk to your CrateDB database. 
+You'll need to configure the project to talk to your CrateDB database.  
 
-TODO
-
-## Install Dependencies
-
-Now install the dependencies that this project requires:
+The first step is to create a `.env` file in which to store your database credentials:
 
 ```bash
-TODO
+cd go
+cp env.example .env
 ```
+
+The next step depends on whether you chose the cloud or local option...
+
+### Cloud Option
+
+Use your text editor / IDE to open the file `.env`.
+
+The file's contents should look like this:
+
+```bash
+CRATEDB_URL=postgres://crate:@localhost:5432/doc
+PORT=8000
+```
+
+Edit the value of the key `CRATEDB_URL` to include your cloud database credentials. The format is:
+
+```
+postgres://username:password@hostname:5432
+```
+
+For example, if your host name is `my-cluster.gke1.us-central1.gcp.cratedb.net`, username is `admin` and password is `sdfW234fwfTY^f` then your URL should look like this:
+
+```
+postgres://admin:sdfW234fwfTY^f@my-cluster.gke1.us-central1.gcp.cratedb.net:5432
+```
+
+Save your changes.
+
+### Local Option
+
+The project comes pre-configured to expect CrateDB to be running with the default configuration on localhost, so there's nothing to do here.
 
 ## Running the Project
 
