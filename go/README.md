@@ -26,10 +26,10 @@ Start the application like this:
 go run server.go
 ```
 
-Once you have the server running, point your browser at port TODO and you should see the map front end:
+Once you have the server running, point your browser at port 8000 and you should see the map front end:
 
 ```
-http://localhost:TODO/
+http://localhost:8000/
 ```
 
 ## Interacting with the Project
@@ -52,27 +52,27 @@ You can see the raw that that the front end uses by visiting the API URLs whilst
 
 * When the page initially loads, it calls this endpoint to get data about all of the wind farms:
 
-`http://localhost:TODO/api/windfarms`
+`http://localhost:8000/api/windfarms`
 
 * Clicking on a wind farm marker on the map loads additional data for that wind farm, using the wind farm's ID.  Here's an example for North Hoyle (`NHOYW-1`): 
 
-`http://localhost:TODO/api/latest/NHOYW-1`
+`http://localhost:8000/api/latest/NHOYW-1`
 
 * When you click on a wind farm marker, the average output percentage for the month is returned from this endpoint.  The parameters are the wind farm ID (`NHOY-1` here) and the timestamp for the 1st of the month (`1727740800000` here).  Example: 
 
-`http://localhost:TODO/api/avgpctformonth/NHOYW-1/1727740800000`
+`http://localhost:8000/api/avgpctformonth/NHOYW-1/1727740800000`
 
 * Cumulative output for the most recent day in the dataset is also displayed when you click on a wind farm marker. Parameters for this endpoint are also the wind farm ID (`NHOY-1` here) and the timestamp for midnight for the day you want data for (`1730073600000` here). Example: 
 
-`http://localhost:TODO/api/outputforday/NHOYW-1/1730073600000`
+`http://localhost:8000/api/outputforday/NHOYW-1/1730073600000`
 
 * Clicking on the polygon for a wind farm loads further data for that wind farm, showing the maximum output percentage for a number of days.  Here's an example for Teeside (`TEES-1`) for 10 days:
 
-`http://localhost:TODO/api/dailymaxpct/TEES-1/10`
+`http://localhost:8000/api/dailymaxpct/TEES-1/10`
 
 ## Shutting Down
 
-To stop the application, press `TODO` in the terminal window that you started it from.
+To stop the application, press `Ctrl-C` in the terminal window that you started it from.
 
 If you're using Docker to run CrateDB, stop the container like so:
 
