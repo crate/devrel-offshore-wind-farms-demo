@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5"
@@ -76,15 +75,12 @@ func main() {
 	})
 
 	app.Get("/api/latest/:id", func(c *fiber.Ctx) error {
-		// c.Params("id")
-		// "SELECT ts AS timestamp, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1"
-
 		type result struct {
-			Timestamp        time.Time `json:"timestamp"` // TODO this outputs a String, need UNIX time.
-			Day              time.Time `json:"day"`       // TODO this outputs a String, need UNIX time.
-			Month            time.Time `json:"month"`     // TODO this outputs a String, need UNIX time.
-			Output           float32   `json:"output"`
-			OutputPercentage float32   `json:"outputPercentage"`
+			Timestamp        int64   `json:"timestamp"`
+			Day              int64   `json:"day"`
+			Month            int64   `json:"month"`
+			Output           float32 `json:"output"`
+			OutputPercentage float32 `json:"outputPercentage"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
@@ -94,18 +90,15 @@ func main() {
 		}
 		defer conn.Release()
 
-		rows, err := conn.Query(context.Background(), "SELECT ts AS timestamp, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1", c.Params("id"))
+		rows, err := conn.Query(context.Background(), "SELECT ts::long AS timestamp, day::long as day, month::long as month, output, outputpercentage FROM windfarm_output WHERE windfarmid = $1 ORDER BY ts DESC LIMIT 1", c.Params("id"))
 		if err != nil {
 			log.Fatalf("Error running query: %v", err)
 		}
 
-		// Use collect here...
 		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
 		if err != nil {
 			log.Fatalf("Error collecting rows: %v", err)
 		}
-
-		// TODO what if there are 0 results?
 
 		return c.JSON(&fiber.Map{
 			"results": results,
