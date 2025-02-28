@@ -31,13 +31,13 @@ PORT=8000
 Edit the value of the key `CRATEDB_URL` to include your cloud database credentials. The format is:
 
 ```
-postgres://username:password@hostname:5432
+postgres://username:password@hostname:5432/doc
 ```
 
 For example, if your host name is `my-cluster.gke1.us-central1.gcp.cratedb.net`, username is `admin` and password is `sdfW234fwfTY^f` then your URL should look like this:
 
 ```
-postgres://admin:sdfW234fwfTY^f@my-cluster.gke1.us-central1.gcp.cratedb.net:5432
+postgres://admin:sdfW234fwfTY^f@my-cluster.gke1.us-central1.gcp.cratedb.net:5432/doc
 ```
 
 Save your changes.
