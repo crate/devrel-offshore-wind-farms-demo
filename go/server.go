@@ -113,7 +113,8 @@ func main() {
 
 	app.Get("/api/avgpctformonth/:id/:ts", func(c *fiber.Ctx) error {
 		type result struct {
-			AvgPct float32 `json:"avgPct" db:"avgoutputpct"`
+			// Using *float32 here as result may be null.
+			AvgPct *float32 `json:"avgPct" db:"avgoutputpct"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
@@ -128,11 +129,15 @@ func main() {
 			log.Fatalf("Error running query: %v", err)
 		}
 
-		// TODO deal with 0 results.
-
 		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
 		if err != nil {
 			log.Fatalf("Error collecting rows: %v", err)
+		}
+
+		// Deal with there being no result, which in this case will mean a null
+		// value in the only entry in results.
+		if results[0].AvgPct == nil {
+			return fiber.NewError(404, fmt.Sprintf("No such windfarm ID: %s.", c.Params("id")))
 		}
 
 		return c.JSON(&fiber.Map{
