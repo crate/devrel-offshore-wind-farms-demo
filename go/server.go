@@ -56,8 +56,6 @@ func main() {
 
 		windfarms := []windfarm{}
 
-		// TODO what if there are 0 results?
-
 		for rows.Next() {
 			windfarm := windfarm{}
 			err := rows.Scan(&windfarm.Id, &windfarm.Name, &windfarm.Description, &windfarm.Location.X, &windfarm.Location.Y, &windfarm.Boundaries, &windfarm.Turbines)
@@ -67,6 +65,10 @@ func main() {
 			}
 
 			windfarms = append(windfarms, windfarm)
+		}
+
+		if len(windfarms) == 0 {
+			return fiber.NewError(404, "No windfarm data found.")
 		}
 
 		return c.JSON(&fiber.Map{
@@ -98,6 +100,10 @@ func main() {
 		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
 		if err != nil {
 			log.Fatalf("Error collecting rows: %v", err)
+		}
+
+		if len(results) == 0 {
+			return fiber.NewError(404, fmt.Sprintf("No such windfarm ID: %s.", c.Params("id")))
 		}
 
 		return c.JSON(&fiber.Map{
@@ -153,11 +159,13 @@ func main() {
 			log.Fatalf("Error running query: %v", err)
 		}
 
-		// TODO deal with 0 results.
-
 		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
 		if err != nil {
 			log.Fatalf("Error collecting rows: %v", err)
+		}
+
+		if len(results) == 0 {
+			return fiber.NewError(404, fmt.Sprintf("No data for windfarm ID: %s.", c.Params("id")))
 		}
 
 		return c.JSON(&fiber.Map{
@@ -183,11 +191,13 @@ func main() {
 			log.Fatalf("Error running query: %v", err)
 		}
 
-		// TODO deal with 0 results...
-
 		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
 		if err != nil {
 			log.Fatalf("Error collecting rows: %v", err)
+		}
+
+		if len(results) == 0 {
+			return fiber.NewError(404, fmt.Sprintf("No data for windfarm ID: %s.", c.Params("id")))
 		}
 
 		return c.JSON(&fiber.Map{
