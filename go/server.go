@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
@@ -34,13 +33,11 @@ func main() {
 			Name        string `json:"name"`
 			Description string `json:"description"`
 			Location    struct {
-				X float64 `json:"x" db:"x"` // Outputs 0
-				Y float64 `json:"y" db:"y"` // Outputs 0
-			} `json:"location" db:"-"`
-			X          float64 `json:"-" db:"x"`
-			Y          float64 `json:"-" db:"y"`
-			Boundaries any     `json:"boundaries"`
-			Turbines   any     `json:"turbines"`
+				X float64 `json:"x"`
+				Y float64 `json:"y"`
+			} `json:"location"`
+			Boundaries any `json:"boundaries"`
+			Turbines   any `json:"turbines"`
 		}
 
 		conn, err := dbpool.Acquire(context.Background())
@@ -56,9 +53,17 @@ func main() {
 		}
 		defer rows.Close()
 
-		windfarms, err := pgx.CollectRows(rows, pgx.RowToStructByName[windfarm])
-		if err != nil {
-			log.Fatalf("Error collecting rows: %v", err)
+		windfarms := []windfarm{}
+
+		for rows.Next() {
+			windfarm := windfarm{}
+			err := rows.Scan(&windfarm.Id, &windfarm.Name, &windfarm.Description, &windfarm.Location.X, &windfarm.Location.Y, &windfarm.Boundaries, &windfarm.Turbines)
+
+			if err != nil {
+				log.Fatalf("Error scanning rows: %v", err)
+			}
+
+			windfarms = append(windfarms, windfarm)
 		}
 
 		return c.JSON(&fiber.Map{
