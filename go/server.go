@@ -166,7 +166,10 @@ func main() {
 	})
 
 	app.Get("/api/dailymaxpct/:id/:days", func(c *fiber.Ctx) error {
-		// "SELECT day::long as day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2"
+		type result struct {
+			Day                 int     `json:"day"`
+			MaxOutputPercentage float32 `json:"maxOutputPercentage"`
+		}
 
 		conn, err := dbpool.Acquire(context.Background())
 
@@ -175,8 +178,20 @@ func main() {
 		}
 		defer conn.Release()
 
+		rows, err := conn.Query(context.Background(), "SELECT day::long as day, max(outputpercentage) AS maxoutputpercentage FROM windfarm_output WHERE windfarmid = $1 GROUP BY day ORDER BY day DESC LIMIT $2", c.Params("id"), c.Params("days"))
+		if err != nil {
+			log.Fatalf("Error running query: %v", err)
+		}
+
+		// TODO deal with 0 results...
+
+		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
+		if err != nil {
+			log.Fatalf("Error collecting rows: %v", err)
+		}
+
 		return c.JSON(&fiber.Map{
-			"results": nil,
+			"results": results,
 		})
 	})
 
