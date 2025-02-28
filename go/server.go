@@ -135,7 +135,11 @@ func main() {
 	})
 
 	app.Get("/api/outputforday/:id/:ts", func(c *fiber.Ctx) error {
-		// "SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = $1 AND day = $2 ORDER BY hour ASC"
+		type result struct {
+			Hour             int     `json:"hour"`
+			Output           float32 `json:"output"`
+			CumulativeOutput float32 `json:"cumulativeOutput"`
+		}
 
 		conn, err := dbpool.Acquire(context.Background())
 
@@ -144,8 +148,20 @@ func main() {
 		}
 		defer conn.Release()
 
+		rows, err := conn.Query(context.Background(), "SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = $1 AND day = $2 ORDER BY hour ASC", c.Params("id"), c.Params("ts"))
+		if err != nil {
+			log.Fatalf("Error running query: %v", err)
+		}
+
+		// TODO deal with 0 results.
+
+		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
+		if err != nil {
+			log.Fatalf("Error collecting rows: %v", err)
+		}
+
 		return c.JSON(&fiber.Map{
-			"results": nil,
+			"results": results,
 		})
 	})
 
