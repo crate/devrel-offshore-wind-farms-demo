@@ -106,7 +106,9 @@ func main() {
 	})
 
 	app.Get("/api/avgpctformonth/:id/:ts", func(c *fiber.Ctx) error {
-		// "SELECT trunc(avg(outputpercentage), 2) AS avgoutputpct FROM windfarm_output WHERE windfarmid = $1 and month = $2"
+		type result struct {
+			AvgPct float32 `json:"avgPct" db:"avgoutputpct"`
+		}
 
 		conn, err := dbpool.Acquire(context.Background())
 
@@ -115,8 +117,20 @@ func main() {
 		}
 		defer conn.Release()
 
+		rows, err := conn.Query(context.Background(), "SELECT trunc(avg(outputpercentage), 2) AS avgoutputpct FROM windfarm_output WHERE windfarmid = $1 and month = $2", c.Params("id"), c.Params("ts"))
+		if err != nil {
+			log.Fatalf("Error running query: %v", err)
+		}
+
+		// TODO deal with 0 results.
+
+		results, err := pgx.CollectRows(rows, pgx.RowToStructByName[result])
+		if err != nil {
+			log.Fatalf("Error collecting rows: %v", err)
+		}
+
 		return c.JSON(&fiber.Map{
-			"results": nil,
+			"results": results,
 		})
 	})
 
