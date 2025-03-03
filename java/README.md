@@ -43,7 +43,7 @@ TODO
 Start the application like this:
 
 ```bash
-mvn exec:java
+java -jar target/windfarms-1.0-SNAPSHOT.jar server windfarms.yml
 ```
 
 Once you have the server running, point your browser at port 8000 and you should see the map front end:
