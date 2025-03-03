@@ -12,3 +12,4 @@ devrel-offshore-wind-farms-demo
 target/
 .mvn/
 dependency-reduced-pom.xml
+.vscode/
