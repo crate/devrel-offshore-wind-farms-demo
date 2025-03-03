@@ -30,12 +30,20 @@ Now install the dependencies that this project requires:
 TODO
 ```
 
+## Compiling the Project
+
+TODO
+
+```bash
+TODO
+```
+
 ## Running the Project
 
 Start the application like this:
 
 ```bash
-TODO
+mvn exec:java
 ```
 
 Once you have the server running, point your browser at port 8000 and you should see the map front end:
