@@ -10,3 +10,4 @@ obj/
 node_modules/
 devrel-offshore-wind-farms-demo
 target/
+.mvn/
