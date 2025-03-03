@@ -13,7 +13,7 @@ Other resources that use this dataset include:
 * A Jupyter notebook that lets you explore the queries shown in the conference talk.  [Run it on Google Colab](https://github.com/crate/cratedb-examples/tree/main/topic/multi-model).
 * The raw data for this dataset, as JSON files.  [Clone the GitHub repository](https://github.com/crate/cratedb-datasets/tree/main/devrel/uk-offshore-wind-farm-data).
 
-Backend servers implementations for this project are available for C#, Python, Node.js and Go.
+Backend servers implementations for this project are available for C#, Python, Node.js, Go and Java.
 
 ## Prerequisites
 
@@ -23,6 +23,7 @@ To run this project you'll need to install the following software:
 * (Python version) Python 3 ([download](https://www.python.org/downloads/)) - we've tested this project with Python 3.12 on macOS Sequoia.
 * (Node.js version) Node.js ([download](https://nodejs.org/en/download)) - we've tested this project with Node.js 22 on macOS Sequoia.
 * (Go version) Go ([download](https://go.dev/doc/install)) - we've tested this project with Go version 1.24.0 on macOS Sequoia.
+* (Java Version) a JDK ([download](https://openjdk.org/projects/jdk/21/)) - we've tested this project with OpenJDK 21.0.6 on macOS Sequoia.
 * Git command line tools ([download](https://git-scm.com/downloads)).
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
 * Access to a cloud or local CrateDB cluster (see below for details).
@@ -142,6 +143,7 @@ The backend server for this project has two different implementations, each with
 * To use Python, follow the instructions [here](python/README.md).
 * To use Node.js, follow the instructions [here](nodejs/README.md).
 * To use Go, follow the instructions [here](go/README.md).
+* To use Java, follow the instructions [here](java/README.md).
 
 ## Understanding the Code
 
@@ -170,6 +172,12 @@ Database access is handled using the [node-postgres](https://node-postgres.com/)
 The server is written in Go using the [Fiber framework](https://docs.gofiber.io/).  The code is contained in a single file: `server.go`.  This contains a minimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `public` folder.
 
 Database access is handled using the [pgx](https://github.com/jackc/pgx) driver.
+
+#### Java Version
+
+The server is written in Java using the TODO framework. TODO.  The project contains a minimal web application that runs code to access CrateDB when called on various endpoints, and also serves static files from the `TODO` folder.
+
+Database access is handled using TODO.
 
 ### Front End Code
 
