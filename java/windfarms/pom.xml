@@ -115,6 +115,7 @@
           <configuration>
             <archive>
               <manifest>
+                <mainClass>com.cratedb.windfarms.App</mainClass>
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               </manifest>
             </archive>
