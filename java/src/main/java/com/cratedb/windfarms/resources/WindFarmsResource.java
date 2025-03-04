@@ -7,6 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 import com.cratedb.windfarms.api.WindFarm;
+import com.cratedb.windfarms.api.WindFarmResults;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -33,47 +34,41 @@ public class WindFarmsResource {
 
     @GET
     @Path("/windfarms")
-    public List<WindFarm> windfarms() throws JsonProcessingException {
+    public WindFarmResults windfarms() throws JsonProcessingException {
         List<WindFarm> windFarms = new ArrayList<WindFarm>();
 
-        Handle h = jdbi.open();
-        List<Map<String, Object>> rs = h.createQuery("SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC").mapToMap().list();
+        try (Handle h = jdbi.open()) {
+            List<Map<String, Object>> rs = h.createQuery("SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC").mapToMap().list();
 
-        for (Map<String, Object> row : rs) {
-            System.out.println(row.get("id"));
-            System.out.println(row.get("name"));
-            System.out.println(row.get("description"));
-            System.out.println(row.get("location"));
-            System.out.println(row.get("boundaries"));
-            System.out.println(row.get("turbines"));
+            for (Map<String, Object> row : rs) {
+                Hashtable<String, Double> loc = new Hashtable<String, Double>();
+                PGpoint pt = (PGpoint)row.get("location");
 
-            Hashtable<String, Double> loc = new Hashtable<String, Double>();
-            PGpoint pt = (PGpoint)row.get("location");
+                loc.put("x", pt.x);
+                loc.put("y", pt.y);
 
-            loc.put("x", pt.x);
-            loc.put("y", pt.y);
+                ObjectMapper m = new ObjectMapper();
+                JsonNode boundaries = m.readTree(row.get("boundaries").toString());
+                JsonNode turbines = m.readTree(row.get("turbines").toString());
+            
+                WindFarm wf = new WindFarm(
+                    row.get("id").toString(), 
+                    row.get("name").toString(), 
+                    row.get("description").toString(),
+                    loc,
+                    boundaries,
+                    turbines
+                );
 
-            ObjectMapper m = new ObjectMapper();
-            JsonNode boundaries = m.readTree(row.get("boundaries").toString());
-            JsonNode turbines = m.readTree(row.get("turbines").toString());
-        
-            WindFarm wf = new WindFarm(
-                row.get("id").toString(), 
-                row.get("name").toString(), 
-                row.get("description").toString(),
-                loc,
-                boundaries,
-                turbines
-            );
+                windFarms.add(wf);
+            }
 
-            windFarms.add(wf);
+            h.close();
         }
-        // TODO do some formatting to get windFarms as an array in a key results.
 
-        // TODO ensure this always happens.
-        h.close();
+        // TODO 404 case...
 
-        return windFarms;
+        return new WindFarmResults(windFarms);
     }
 
     @GET
