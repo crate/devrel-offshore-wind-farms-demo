@@ -55,8 +55,8 @@ public class WindFarmsResource {
                 row.get("name").toString(), 
                 row.get("description").toString(),
                 loc,
-                row.get("boundaries"),
-                row.get("turbines")
+                row.get("boundaries"), // TODO fix up JSON.
+                row.get("turbines") // TODO fix up JSON.
             );
 
             windFarms.add(wf);
