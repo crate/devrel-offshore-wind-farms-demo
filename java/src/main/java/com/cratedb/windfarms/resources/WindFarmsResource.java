@@ -130,7 +130,7 @@ public class WindFarmsResource {
             ).bind("id", id).bind("ts", ts).map((rs, ctx) -> new OutputForDay(
                 rs.getInt("hour"), 
                 rs.getDouble("output"),  
-                rs.getDouble("cumulativeoutput") // TODO round to 2dp.
+                Math.round(rs.getDouble("cumulativeoutput") * Math.pow(10, 2)) / Math.pow(10,2)
             )).list();
         }
 
