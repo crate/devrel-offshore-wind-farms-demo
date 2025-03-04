@@ -10,6 +10,8 @@ import com.cratedb.windfarms.api.AvgPercentForMonth;
 import com.cratedb.windfarms.api.AvgPercentForMonthResults;
 import com.cratedb.windfarms.api.LatestStats;
 import com.cratedb.windfarms.api.LatestStatsResults;
+import com.cratedb.windfarms.api.MaxPercentForDay;
+import com.cratedb.windfarms.api.MaxPercentForDayResults;
 import com.cratedb.windfarms.api.OutputForDay;
 import com.cratedb.windfarms.api.OutputForDayResults;
 import com.cratedb.windfarms.api.WindFarm;
@@ -139,7 +141,20 @@ public class WindFarmsResource {
 
     @GET
     @Path("/dailymaxpct/{id}/{days}")
-    public String dailyMaxPct(@PathParam("id") String id, @PathParam("days") Long days) {
-        return "TODO";
+    public MaxPercentForDayResults dailyMaxPct(@PathParam("id") String id, @PathParam("days") Long days) {
+        List<MaxPercentForDay> maxForDays = new ArrayList<MaxPercentForDay>();
+
+        try (Handle h = jdbi.open()) {
+            maxForDays = h.createQuery(
+                "SELECT day::long AS day, max(outputpercentage) AS maxoutputpct FROM windfarm_output WHERE windfarmid = :id GROUP BY day ORDER BY day DESC LIMIT :days"
+            ).bind("id", id).bind("days", days).map((rs, ctx) -> new MaxPercentForDay(
+                rs.getLong("day"), 
+                rs.getDouble("maxoutputpct")
+            )).list();
+        }
+
+        // TODO 404 case.
+
+        return new MaxPercentForDayResults(maxForDays);
     }
 }
