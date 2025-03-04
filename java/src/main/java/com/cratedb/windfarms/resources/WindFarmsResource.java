@@ -118,17 +118,17 @@ public class WindFarmsResource {
     }
 
     @GET
-    @Path("/api/outputforday/{id}/{ts}")
+    @Path("/outputforday/{id}/{ts}")
     public OutputForDayResults outputForDay(@PathParam("id") String id, @PathParam("ts") Long ts) {
         List<OutputForDay> outputsForDay = new ArrayList<OutputForDay>();
 
         try (Handle h = jdbi.open()) {
             outputsForDay = h.createQuery(
                 "SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = :id AND day = :ts ORDER BY hour ASC"
-            ).bind("id", id).map((rs, ctx) -> new OutputForDay(
+            ).bind("id", id).bind("ts", ts).map((rs, ctx) -> new OutputForDay(
                 rs.getInt("hour"), 
-                rs.getDouble("output"), 
-                rs.getDouble("cumulativeoutput")
+                rs.getDouble("output"),  
+                rs.getDouble("cumulativeoutput") // TODO round to 2dp.
             )).list();
         }
 
@@ -138,7 +138,7 @@ public class WindFarmsResource {
     }
 
     @GET
-    @Path("/api/dailymaxpct/{id}/{days}")
+    @Path("/dailymaxpct/{id}/{days}")
     public String dailyMaxPct(@PathParam("id") String id, @PathParam("days") Long days) {
         return "TODO";
     }
