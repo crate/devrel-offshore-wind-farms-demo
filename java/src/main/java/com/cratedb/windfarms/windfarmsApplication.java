@@ -1,11 +1,14 @@
 package com.cratedb.windfarms;
 
+import org.jdbi.v3.core.Jdbi;
+
 import com.cratedb.windfarms.resources.WindFarmsResource;
 
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.jdbi3.JdbiFactory;
 
 public class windfarmsApplication extends Application<windfarmsConfiguration> {
 
@@ -28,9 +31,14 @@ public class windfarmsApplication extends Application<windfarmsConfiguration> {
     @Override
     public void run(final windfarmsConfiguration configuration,
                     final Environment environment) {
-        WindFarmsResource windFarmsRes = new WindFarmsResource();
+
+        final JdbiFactory factory = new JdbiFactory();
+        final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "postgresql");
+        
+        //WindFarmsResource windFarmsRes = new WindFarmsResource();
         environment.jersey().setUrlPattern("/api/*");
-        environment.jersey().register(windFarmsRes);
+        environment.jersey().register(new WindFarmsResource(jdbi));
+        //environment.jersey().register(windFarmsRes);
     }
 
 }

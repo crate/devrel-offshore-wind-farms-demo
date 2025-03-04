@@ -10,23 +10,53 @@ import com.cratedb.windfarms.api.WindFarm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class WindFarmsResource {
-    public WindFarmsResource() {
+    private Jdbi jdbi;
 
+    public WindFarmsResource(Jdbi jdbi) {
+        this.jdbi = jdbi;
     }
 
     @GET
     @Path("/windfarms")
     public List<WindFarm> windfarms() {
-        ArrayList<WindFarm> windFarms = new ArrayList<WindFarm>();
+        List<WindFarm> windFarms = new ArrayList<WindFarm>();
 
-        // TODO Get real values from the database!
-        // TODO how to return in a results array...
-        WindFarm wf = new WindFarm("TEES-1", "Test Name", "This is the description.");
-        windFarms.add(wf);
+        Handle h = jdbi.open();
+        List<Map<String, Object>> rs = h.createQuery("SELECT id, name, description, location, boundaries, turbines FROM windfarms ORDER BY id ASC").mapToMap().list();
+
+        for (Map<String, Object> row : rs) {
+            System.out.println(row.get("id"));
+            System.out.println(row.get("name"));
+            System.out.println(row.get("description"));
+            System.out.println(row.get("location"));
+            System.out.println(row.get("boundaries"));
+            System.out.println(row.get("turbines"));
+
+            WindFarm wf = new WindFarm(
+                row.get("id").toString(), 
+                row.get("name").toString(), 
+                row.get("description").toString(),
+                row.get("location"),
+                row.get("boundaries"),
+                row.get("turbines")
+            );
+
+            windFarms.add(wf);
+        }
+        // TODO do some formatting.
+
+        // TODO ensure this always happens.
+        h.close();
+
         return windFarms;
     }
 
