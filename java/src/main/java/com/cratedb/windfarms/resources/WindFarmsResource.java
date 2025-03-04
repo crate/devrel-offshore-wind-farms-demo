@@ -6,6 +6,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+import com.cratedb.windfarms.api.AvgPercentForMonth;
+import com.cratedb.windfarms.api.AvgPercentForMonthResults;
 import com.cratedb.windfarms.api.LatestStats;
 import com.cratedb.windfarms.api.LatestStatsResults;
 import com.cratedb.windfarms.api.WindFarm;
@@ -97,8 +99,20 @@ public class WindFarmsResource {
 
     @GET
     @Path("/avgpctformonth/{id}/{ts}")
-    public String avgPctForMonth(@PathParam("id") String id, @PathParam("ts") Long ts) {
-        return "TODO";
+    public AvgPercentForMonthResults avgPctForMonth(@PathParam("id") String id, @PathParam("ts") Long ts) {
+        AvgPercentForMonth result;
+
+        try (Handle h = jdbi.open()) {
+            Double avgPct = h.createQuery(
+                "SELECT trunc(avg(outputpercentage), 2) FROM windfarm_output WHERE windfarmid = :id and month = :ts"
+            ).bind("id", id).bind("ts", ts).mapTo(Double.class).first();
+
+            result = new AvgPercentForMonth(avgPct);
+        }
+
+        // TODO 404 case.
+
+        return new AvgPercentForMonthResults(result);
     }
 
     @GET
