@@ -15,9 +15,12 @@ import java.util.Map;
 
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
 import org.postgresql.geometric.PGpoint;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,7 +33,7 @@ public class WindFarmsResource {
 
     @GET
     @Path("/windfarms")
-    public List<WindFarm> windfarms() {
+    public List<WindFarm> windfarms() throws JsonProcessingException {
         List<WindFarm> windFarms = new ArrayList<WindFarm>();
 
         Handle h = jdbi.open();
@@ -49,19 +52,23 @@ public class WindFarmsResource {
 
             loc.put("x", pt.x);
             loc.put("y", pt.y);
+
+            ObjectMapper m = new ObjectMapper();
+            JsonNode boundaries = m.readTree(row.get("boundaries").toString());
+            JsonNode turbines = m.readTree(row.get("turbines").toString());
         
             WindFarm wf = new WindFarm(
                 row.get("id").toString(), 
                 row.get("name").toString(), 
                 row.get("description").toString(),
                 loc,
-                row.get("boundaries"), // TODO fix up JSON.
-                row.get("turbines") // TODO fix up JSON.
+                boundaries,
+                turbines
             );
 
             windFarms.add(wf);
         }
-        // TODO do some formatting.
+        // TODO do some formatting to get windFarms as an array in a key results.
 
         // TODO ensure this always happens.
         h.close();
