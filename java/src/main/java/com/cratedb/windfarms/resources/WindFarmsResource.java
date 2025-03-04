@@ -10,6 +10,8 @@ import com.cratedb.windfarms.api.AvgPercentForMonth;
 import com.cratedb.windfarms.api.AvgPercentForMonthResults;
 import com.cratedb.windfarms.api.LatestStats;
 import com.cratedb.windfarms.api.LatestStatsResults;
+import com.cratedb.windfarms.api.OutputForDay;
+import com.cratedb.windfarms.api.OutputForDayResults;
 import com.cratedb.windfarms.api.WindFarm;
 import com.cratedb.windfarms.api.WindFarmResults;
 
@@ -117,8 +119,22 @@ public class WindFarmsResource {
 
     @GET
     @Path("/api/outputforday/{id}/{ts}")
-    public String outputForDay(@PathParam("id") String id, @PathParam("ts") Long ts) {
-        return "TODO";
+    public OutputForDayResults outputForDay(@PathParam("id") String id, @PathParam("ts") Long ts) {
+        List<OutputForDay> outputsForDay = new ArrayList<OutputForDay>();
+
+        try (Handle h = jdbi.open()) {
+            outputsForDay = h.createQuery(
+                "SELECT extract(hour from ts) AS hour, output, sum(output) OVER (ORDER BY ts ASC) AS cumulativeoutput FROM windfarm_output WHERE windfarmid = :id AND day = :ts ORDER BY hour ASC"
+            ).bind("id", id).map((rs, ctx) -> new OutputForDay(
+                rs.getInt("hour"), 
+                rs.getDouble("output"), 
+                rs.getDouble("cumulativeoutput")
+            )).list();
+        }
+
+        // TODO 404 case.
+
+        return new OutputForDayResults(outputsForDay);
     }
 
     @GET
