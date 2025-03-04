@@ -7,6 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 import com.cratedb.windfarms.api.LatestStats;
+import com.cratedb.windfarms.api.LatestStatsResults;
 import com.cratedb.windfarms.api.WindFarm;
 import com.cratedb.windfarms.api.WindFarmResults;
 
@@ -74,10 +75,11 @@ public class WindFarmsResource {
 
     @GET
     @Path("/latest/{id}")
-    public List<LatestStats> latestForId(@PathParam("id") String id) {
-    //public List<Map<String, Object>> latestForId(@PathParam("id") String id) {
+    public LatestStatsResults latestForId(@PathParam("id") String id) {
+        List<LatestStats> stats = new ArrayList<LatestStats>();
+
         try (Handle h = jdbi.open()) {
-            List<LatestStats> stats = h.createQuery(
+            stats = h.createQuery(
                 "SELECT ts::long as ts, day::long as day, month::long as month, output, outputpercentage FROM windfarm_output WHERE windfarmid = :id ORDER BY ts DESC LIMIT 1"
             ).bind("id", id).map((rs, ctx) -> new LatestStats(
                 rs.getLong("ts"), 
@@ -86,17 +88,11 @@ public class WindFarmsResource {
                 rs.getDouble("output"), 
                 rs.getDouble("outputpercentage")
             )).list();
-
-            // List<Map<String, Object>> rs = h.createQuery(
-            //     "SELECT ts, day, month, output, outputpercentage FROM windfarm_output WHERE windfarmid = :id ORDER BY ts DESC LIMIT 1"
-            // ).bind("id", id).mapToMap().list();
-
-            return stats;
         }
 
         // TODO 404 case.
 
-        // TODO wrap in result object.
+        return new LatestStatsResults(stats);
    }
 
     @GET
