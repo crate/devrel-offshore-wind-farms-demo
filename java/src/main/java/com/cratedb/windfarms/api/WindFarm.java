@@ -1,12 +1,13 @@
 package com.cratedb.windfarms.api;
 
+import java.util.Hashtable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WindFarm {
     private String id;
     private String name;
     private String description;
-    private Object location;
+    private Hashtable<String, Double> location;
     private Object boundaries;
     private Object turbines;
 
@@ -14,7 +15,7 @@ public class WindFarm {
         // Jackson deserialization requires this.
     }
 
-    public WindFarm(String id,String name,String description, Object location, Object boundaries, Object turbines) {
+    public WindFarm(String id,String name,String description, Hashtable<String, Double> location, Object boundaries, Object turbines) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,7 +40,7 @@ public class WindFarm {
     }
 
     @JsonProperty
-    public Object getLocation() {
+    public Hashtable<String, Double> getLocation() {
         return location;
     }
 

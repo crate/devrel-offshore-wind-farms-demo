@@ -9,12 +9,15 @@ import jakarta.ws.rs.core.MediaType;
 import com.cratedb.windfarms.api.WindFarm;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
+
+import org.postgresql.geometric.PGpoint;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -41,11 +44,17 @@ public class WindFarmsResource {
             System.out.println(row.get("boundaries"));
             System.out.println(row.get("turbines"));
 
+            Hashtable<String, Double> loc = new Hashtable<String, Double>();
+            PGpoint pt = (PGpoint)row.get("location");
+
+            loc.put("x", pt.x);
+            loc.put("y", pt.y);
+        
             WindFarm wf = new WindFarm(
                 row.get("id").toString(), 
                 row.get("name").toString(), 
                 row.get("description").toString(),
-                row.get("location"),
+                loc,
                 row.get("boundaries"),
                 row.get("turbines")
             );
