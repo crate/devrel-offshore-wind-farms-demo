@@ -75,7 +75,9 @@ public class WindFarmsResource {
             h.close();
         }
 
-        // TODO 404 case...
+        if (windFarms.size() == 0) {
+            throw new WebApplicationException("No windfarm data found.", 404);
+        }
 
         return new WindFarmResults(windFarms);
     }
