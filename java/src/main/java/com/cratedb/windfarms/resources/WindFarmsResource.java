@@ -109,7 +109,7 @@ public class WindFarmsResource {
     @GET
     @Path("/avgpctformonth/{id}/{ts}")
     public AvgPercentForMonthResults avgPctForMonth(@PathParam("id") String id, @PathParam("ts") Long ts) {
-        AvgPercentForMonth result;
+        AvgPercentForMonth result = null;
 
         try (Handle h = jdbi.open()) {
             Double avgPct = h.createQuery(
@@ -117,9 +117,9 @@ public class WindFarmsResource {
             ).bind("id", id).bind("ts", ts).mapTo(Double.class).first();
 
             result = new AvgPercentForMonth(avgPct);
+        } catch (NullPointerException e) {
+            throw new WebApplicationException("No such windfarm ID: " + id + ".", 404);
         }
-
-        // TODO 404 case.
 
         return new AvgPercentForMonthResults(result);
     }
