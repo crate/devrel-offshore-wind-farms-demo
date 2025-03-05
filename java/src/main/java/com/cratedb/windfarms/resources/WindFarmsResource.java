@@ -158,7 +158,9 @@ public class WindFarmsResource {
             )).list();
         }
 
-        // TODO 404 case.
+        if (maxForDays.size() == 0) {
+            throw new WebApplicationException("No data for windfarm ID " + id + ".", 404);
+        }
 
         return new MaxPercentForDayResults(maxForDays);
     }
