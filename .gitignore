@@ -12,3 +12,4 @@ devrel-offshore-wind-farms-demo
 .vscode/
 target/
 dependency-reduced-pom.xml
+config.yml

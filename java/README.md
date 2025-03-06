@@ -8,7 +8,12 @@ Follow the instructions below to configure and run the Java implementation of th
 
 You'll need to configure the project to talk to your CrateDB database.  
 
-Configuration settings are stored in `config.yml`.  
+The first step is to create a `config.yml` file in which to store your database credentials:
+
+```bash
+cd java
+cp config_example.yml config.yml
+```
 
 The next step depends on whether you chose the cloud or local option...
 
