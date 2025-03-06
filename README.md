@@ -24,6 +24,7 @@ To run this project you'll need to install the following software:
 * (Node.js version) Node.js ([download](https://nodejs.org/en/download)) - we've tested this project with Node.js 22 on macOS Sequoia.
 * (Go version) Go ([download](https://go.dev/doc/install)) - we've tested this project with Go version 1.24.0 on macOS Sequoia.
 * (Java Version) a JDK ([download](https://openjdk.org/projects/jdk/21/)) - we've tested this project with OpenJDK 21.0.6 on macOS Sequoia.
+* (Java Version) Apache Maven ([download](https://maven.apache.org/)) - we've tested this project with Maven 3.9.6.
 * Git command line tools ([download](https://git-scm.com/downloads)).
 * Your favorite code editor, to edit configuration files and browse/edit the code if you wish.  [Visual Studio Code](https://code.visualstudio.com/) is great for this.
 * Access to a cloud or local CrateDB cluster (see below for details).
