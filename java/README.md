@@ -8,15 +8,46 @@ Follow the instructions below to configure and run the Java implementation of th
 
 You'll need to configure the project to talk to your CrateDB database.  
 
-TODO
+Configuration settings are stored in `config.yml`.  
 
 The next step depends on whether you chose the cloud or local option...
 
 ### Cloud Option
 
-TODO
+Use your text editor / IDE to open the file `config.yml`.
 
-Save your changes.
+Find the `database` section, which looks like this:
+
+```
+database:
+  # the name of your JDBC driver
+  driverClass: org.postgresql.Driver
+
+  # the username
+  user: crate
+
+  # the password
+  password: 
+
+  # the JDBC URL
+  url: jdbc:postgresql://localhost/doc
+
+...
+```
+
+Make the following changes:
+
+* Change the value of `user` from `crate` to `admin`.
+* Set the value of `password` to be the password for your cloud instance.
+* Set the value of `url` to be `jdbc:postgresql://hostname/doc` where `hostname` is the host for your cloud instance.
+
+For example, if your host name is `my-cluster.gke1.us-central1.gcp.cratedb.net` then your URL should look like this:
+
+```
+jdbc:postgresql://my-cluster.gke1.us-central1.gcp.cratedb.net/doc
+```
+
+Save your changes.  Remember not to commit `config.yml` to source control as you should consider your database credentials as a secret.
 
 ### Local Option
 
@@ -24,7 +55,7 @@ The project comes pre-configured to expect CrateDB to be running with the defaul
 
 ## Compiling and Packaging the Project
 
-TODO
+Use the following Maven command to compile and package the project into a single executable Jar file:
 
 ```bash
 mvn clean package
